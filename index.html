@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lorenzo Marrocchi | Ingénieur Systèmes Embarqués</title>
+    <title>Lorenzo | Ingénieur</title>
     <link rel="shortcut icon" href="./assets/profile-pic.png">
     
     <!-- Google Fonts -->
@@ -64,59 +64,91 @@
         .lang-icon-anim { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .lang-switch-active .lang-icon-anim { transform: rotate(360deg) scale(1.2); color: #699b71; }
 
-        /* --- TIMELINE EXPERIENCE --- */
-        .timeline-line {
-            position: absolute;
-            left: 28px; /* Mobile par défaut */
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #334155;
-            z-index: 0;
+        /* MENU MOBILE "NUAGE" ANIMATION */
+        #mobile-menu {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Easing fluide */
+            transform-origin: top center;
+            overflow: hidden;
         }
-        .timeline-line::before {
-            content: ''; position: absolute; top: -6px; left: -4px; width: 0; height: 0; 
-            border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #699b71;
+        
+        #mobile-menu.hidden {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+            max-height: 0;
+            pointer-events: none;
+            display: block; /* Garder block pour l'anim */
+            visibility: hidden;
+            margin-top: 0;
         }
-        .timeline-connector {
-            position: absolute; height: 2px; background: #334155; width: 20px; top: 30px; z-index: 0;
-            transition: width 0.3s ease, background-color 0.3s ease;
-        }
-        .timeline-dot {
-            position: absolute; width: 16px; height: 16px; background-color: #334155;
-            border: 3px solid #0f172a; border-radius: 50%; z-index: 10;
-            top: 23px; transition: all 0.3s ease;
+        
+        #mobile-menu:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            max-height: 500px; /* Suffisant pour le contenu */
+            visibility: visible;
+            margin-top: 10px;
         }
 
-        /* Desktop Layout */
+        /* --- TIMELINE EXPERIENCE --- */
+        /* Desktop Only Logic */
         @media (min-width: 768px) {
-            .timeline-line { left: 50%; transform: translateX(-50%); }
+            .timeline-line {
+                position: absolute; left: 50%; transform: translateX(-50%);
+                top: 0; bottom: 0; width: 2px; background: #334155; z-index: 0;
+            }
+            .timeline-line::before {
+                content: ''; position: absolute; top: -6px; left: -4px; width: 0; height: 0; 
+                border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #699b71;
+            }
+            .timeline-connector {
+                position: absolute; height: 2px; background: #334155; width: 40px; top: 30px; z-index: 0;
+                transition: width 0.3s ease, background-color 0.3s ease;
+            }
+            .timeline-dot {
+                position: absolute; width: 20px; height: 20px; background-color: #334155;
+                border: 4px solid #0f172a; border-radius: 50%; z-index: 10;
+                top: 21px; left: 50%; transform: translateX(-50%); transition: all 0.3s ease;
+            }
+            
             .timeline-item:nth-child(even) { flex-direction: row-reverse; }
             .timeline-item:nth-child(even) .timeline-content { text-align: left; }
             .timeline-item:nth-child(even) .timeline-connector { left: auto; right: 50%; width: 40px; margin-right: 2px; }
-            .timeline-item:nth-child(even) .timeline-dot { left: 50%; transform: translateX(-50%); }
             
             .timeline-item:nth-child(odd) .timeline-content { text-align: right; }
             .timeline-item:nth-child(odd) .timeline-connector { left: 50%; right: auto; width: 40px; margin-left: 2px; }
             .timeline-item:nth-child(odd) .timeline-dot { left: 50%; transform: translateX(-50%); }
             .timeline-item:nth-child(odd) .timeline-content .tags-container { justify-content: flex-end; }
+
+            .timeline-content:hover { border-color: #699b71; transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(105, 155, 113, 0.15); }
+            .timeline-item:hover .timeline-dot { background-color: #699b71; box-shadow: 0 0 0 4px rgba(105, 155, 113, 0.3); border-color: #0f172a; }
+            .timeline-item:hover .timeline-connector { background-color: #699b71; }
+        }
+
+        /* Mobile Optimization (Full Width Cards) */
+        @media (max-width: 767px) {
+            .timeline-line, .timeline-connector, .timeline-dot { display: none; } /* Cache la timeline classique */
             
-            .timeline-dot { width: 20px; height: 20px; border-width: 4px; top: 21px; }
-        }
-
-        /* Mobile Layout */
-        @media (max-width: 768px) {
-            .timeline-item { flex-direction: row !important; padding-left: 50px; text-align: left !important; }
-            .timeline-dot { left: 21px !important; transform: none !important; }
-            .timeline-content { width: 100% !important; text-align: left !important; }
+            .timeline-item {
+                flex-direction: column;
+                width: 100%;
+                margin-bottom: 1.5rem;
+                padding-left: 0;
+            }
+            
+            .timeline-content {
+                width: 100% !important;
+                text-align: left !important;
+                border-left: 4px solid #334155; /* Indicateur visuel simple */
+                padding: 1.25rem;
+            }
+            
+            .timeline-content:hover {
+                border-left-color: #699b71;
+                background-color: #1e293b;
+            }
+            
             .tags-container { justify-content: flex-start !important; }
-            .timeline-connector { left: 28px; width: 22px; }
         }
-
-        /* Hitbox & Hover */
-        .timeline-content:hover { border-color: #699b71; transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(105, 155, 113, 0.15); }
-        .timeline-item:hover .timeline-dot { background-color: #699b71; box-shadow: 0 0 0 4px rgba(105, 155, 113, 0.3); border-color: #0f172a; }
-        .timeline-item:hover .timeline-connector { background-color: #699b71; }
 
         /* --- PROJECTS --- */
         .project-card { cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -126,6 +158,10 @@
         /* --- TABS --- */
         .tab-btn { transition: all 0.3s ease; }
         .tab-btn.active { background-color: #699b71; color: white; border-color: #699b71; box-shadow: 0 4px 12px rgba(105, 155, 113, 0.3); }
+        /* Flex pour les langues pour bien centrer */
+        .tab-content.flex { display: none; } 
+        .tab-content.active.flex { display: flex; }
+        
         .tab-content { display: none; animation: fadeInTabs 0.5s ease; }
         .tab-content.active { display: grid; }
         @keyframes fadeInTabs { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -198,26 +234,28 @@
             </div>
         </div>
 
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-card/95 backdrop-blur-xl border-b border-gray-700 absolute w-full left-0 top-20 shadow-2xl">
+        <!-- Mobile Menu Panel ("Nuage Flottant") -->
+        <div id="mobile-menu" class="hidden md:hidden absolute left-4 right-4 bg-card/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-2xl z-40">
             <div class="px-4 pt-4 pb-6 space-y-2 text-center">
-                <a href="#about" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_about">À propos</a>
-                <a href="#projects" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_projects">Projets</a>
-                <a href="#experience" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_exp">Parcours</a>
-                <a href="#skills" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_skills">Compétences</a>
-                <a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_contact">Contact</a>
-                <a href="./assets/CV_Lorenzo_MARROCCHI.pdf" target="_blank" class="resume-link block mt-4 mx-8 px-3 py-3 rounded-lg bg-primary text-white font-bold shadow-lg" data-i18n="nav_resume">Mon CV</a>
+                <a href="#about" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary transition-colors" data-i18n="nav_about">À propos</a>
+                <a href="#projects" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary transition-colors" data-i18n="nav_projects">Projets</a>
+                <a href="#experience" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary transition-colors" data-i18n="nav_exp">Parcours</a>
+                <a href="#skills" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary transition-colors" data-i18n="nav_skills">Compétences</a>
+                <a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary transition-colors" data-i18n="nav_contact">Contact</a>
+                <div class="pt-2 border-t border-gray-700 mt-2">
+                    <a href="./assets/CV_Lorenzo_MARROCCHI.pdf" target="_blank" class="resume-link block mx-4 px-3 py-3 rounded-lg bg-primary text-white font-bold shadow-lg hover:bg-green-700 transition-colors" data-i18n="nav_resume">Mon CV</a>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- About Section -->
-    <section id="about" class="min-h-screen flex items-center justify-center pt-24 pb-24 md:pb-0 relative overflow-hidden bg-dark">
+    <section id="about" class="min-h-screen flex items-center justify-center pt-36 pb-8 md:pt-32 md:pb-16 relative overflow-hidden bg-dark">
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-center">
                 
                 <!-- Text -->
                 <div class="order-2 md:order-1 fade-in">
@@ -232,7 +270,7 @@
                         Ingénieur Systèmes Embarqués
                     </h2>
                     <p class="text-gray-400 max-w-lg mb-8 leading-relaxed text-lg" data-i18n="hero_desc">
-                        Étudiant de 22 ans en Systèmes Embarqués à l'ECE Paris. Passionné par la fusion de l'électronique et de l'informatique, je conçois des solutions innovantes.
+                        Ingénieur en systèmes embarqués de 23 ans, diplômé de l’École Centrale d’Électronique. Je suis ouvert à toute opportunité.
                     </p>
                     
                     <div class="flex flex-wrap gap-4">
@@ -244,7 +282,7 @@
                         </a>
                     </div>
 
-                    <div class="mt-10 flex gap-6 text-2xl text-gray-500">
+                    <div class="mt-12 flex gap-6 text-2xl text-gray-500">
                         <a href="https://github.com/MrZouu/" target="_blank" class="hover:text-white hover:scale-110 transition-all"><i class="fab fa-github"></i></a>
                         <a href="https://www.linkedin.com/in/lorenzo-marrocchi/" target="_blank" class="hover:text-blue-400 hover:scale-110 transition-all"><i class="fab fa-linkedin"></i></a>
                         <a href="mailto:lorenzomarrocchi02@gmail.com" class="hover:text-primary hover:scale-110 transition-all"><i class="fas fa-envelope"></i></a>
@@ -650,7 +688,7 @@
             </div>
 
             <!-- Tab Contents Container -->
-            <div class="bg-card rounded-3xl p-6 md:p-12 border border-gray-800 shadow-2xl min-h-[350px]">
+            <div class="bg-card rounded-3xl p-6 md:p-12 border border-gray-800 shadow-2xl min-h-[250px] md:min-h-[350px]">
                 
                 <!-- CONTENT: Embedded -->
                 <div id="embedded" class="tab-content active grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 text-center">
@@ -748,22 +786,22 @@
                     </div>
                 </div>
 
-                <!-- CONTENT: Languages -->
-                <div id="languages" class="tab-content grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div class="p-8 bg-dark/50 rounded-xl border border-gray-700 hover:border-primary transition-colors">
-                        <span class="text-5xl block mb-4">🇫🇷</span>
-                        <h3 class="text-xl font-bold text-white mb-2" data-i18n="lang_fr">Français</h3>
-                        <p class="text-primary font-medium" data-i18n="lang_native">Langue Maternelle</p>
+                <!-- CONTENT: Languages (Flex Centered) -->
+                <div id="languages" class="tab-content flex flex-wrap justify-center gap-4 md:gap-12 text-center">
+                    <div class="p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <span class="text-4xl md:text-6xl block mb-2 md:mb-4 group-hover:scale-110 transition-transform">🇫🇷</span>
+                        <span class="text-xs md:text-base font-medium text-gray-200 block" data-i18n="lang_fr">Français</span>
+                        <span class="text-[10px] md:text-xs text-primary block mt-1" data-i18n="lang_native">Maternelle</span>
                     </div>
-                    <div class="p-8 bg-dark/50 rounded-xl border border-gray-700 hover:border-primary transition-colors">
-                        <span class="text-5xl block mb-4">🇬🇧</span>
-                        <h3 class="text-xl font-bold text-white mb-2" data-i18n="lang_en">Anglais</h3>
-                        <p class="text-primary font-medium" data-i18n="lang_fluent">Courant (TOEIC 855)</p>
+                    <div class="p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <span class="text-4xl md:text-6xl block mb-2 md:mb-4 group-hover:scale-110 transition-transform">🇬🇧</span>
+                        <span class="text-xs md:text-base font-medium text-gray-200 block" data-i18n="lang_en">Anglais</span>
+                        <span class="text-[10px] md:text-xs text-primary block mt-1" data-i18n="lang_fluent">Courant</span>
                     </div>
-                    <div class="p-8 bg-dark/50 rounded-xl border border-gray-700 hover:border-primary transition-colors">
-                        <span class="text-5xl block mb-4">🇮🇹</span>
-                        <h3 class="text-xl font-bold text-white mb-2" data-i18n="lang_it">Italien</h3>
-                        <p class="text-primary font-medium" data-i18n="lang_bilingual">Bilingue</p>
+                    <div class="p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <span class="text-4xl md:text-6xl block mb-2 md:mb-4 group-hover:scale-110 transition-transform">🇮🇹</span>
+                        <span class="text-xs md:text-base font-medium text-gray-200 block" data-i18n="lang_it">Italien</span>
+                        <span class="text-[10px] md:text-xs text-primary block mt-1" data-i18n="lang_bilingual">Bilingue</span>
                     </div>
                 </div>
             </div>
@@ -838,7 +876,7 @@
         // --- TRANSLATION DATA ---
         const cvLinks = {
             fr: "./assets/CV_Lorenzo_MARROCCHI.pdf",
-            en: "./assets/RESUME_Lorenzo_MARROCCHI.pdf"
+            en: "./assets/RESUME_Lorenzo_MARROCCHI_Internship_2025.pdf"
         };
 
         const translations = {
@@ -846,11 +884,11 @@
                 nav_about: "À propos", nav_skills: "Compétences", nav_exp: "Parcours", nav_projects: "Projets", nav_contact: "Contact", nav_resume: "Mon CV",
                 hero_greeting: "Bonjour, je m'appelle",
                 hero_role: "Ingénieur Systèmes Embarqués",
-                hero_desc: "Étudiant de 22 ans en Systèmes Embarqués à l'ECE Paris. Passionné par la fusion de l'électronique et de l'informatique. Je suis ouvert à toute opportunité.",
+                hero_desc: "Ingénieur en systèmes embarqués de 23 ans, diplômé de l’École Centrale d’Électronique. Je suis ouvert à toute opportunité.",
                 btn_projects: "Voir mes projets", btn_contact: "Me contacter",
                 title_skills: "Mes Compétences",
                 tab_embedded: "Systèmes Embarqués", tab_software: "Software & IA", tab_tools: "Outils", tab_languages: "Langues",
-                lang_native: "Langue Maternelle", lang_fluent: "Courant (TOEIC 855)", lang_bilingual: "Bilingue",
+                lang_native: "Maternelle", lang_fluent: "Courant", lang_bilingual: "Bilingue",
                 lang_fr: "Français", lang_en: "Anglais", lang_it: "Italien",
                 title_exp: "Expériences Professionnelles", title_edu: "Formation",
                 job1_title: "Ingénieur Développement Système", job1_desc: "Stage de fin d'études : Développement d'interfaces IHM pour équipements GSE. Couplage d'hexapodes et rétro-ingénierie.",
@@ -880,11 +918,11 @@
                 nav_about: "About", nav_skills: "Skills", nav_exp: "Experience", nav_projects: "Projects", nav_contact: "Contact", nav_resume: "Resume",
                 hero_greeting: "Hi, I am",
                 hero_role: "Embedded Systems Engineer",
-                hero_desc: "22-year-old Embedded Systems student at ECE Paris. Passionate about the fusion of electronics and computer science. Open to new opportunities.",
+                hero_desc: "23-year-old Embedded Systems Engineer, graduated from the École Centrale d’Électronique. I am open to any opportunity.",
                 btn_projects: "See my projects", btn_contact: "Contact me",
                 title_skills: "My Skills",
                 tab_embedded: "Embedded Systems", tab_software: "Software & AI", tab_tools: "Tools", tab_languages: "Languages",
-                lang_native: "Native Speaker", lang_fluent: "Fluent (TOEIC 855)", lang_bilingual: "Bilingual",
+                lang_native: "Native", lang_fluent: "Fluent", lang_bilingual: "Bilingual",
                 lang_fr: "French", lang_en: "English", lang_it: "Italian",
                 title_exp: "Work Experience", title_edu: "Education",
                 job1_title: "System Development Engineer", job1_desc: "End-of-studies internship: Development of HMI interfaces for GSE equipment. Hexapod coupling and reverse engineering.",
@@ -984,7 +1022,18 @@
             
             // Show target
             const activeContent = document.getElementById(tabName);
-            activeContent.style.display = "grid";
+            
+            // FIX: Set display property correctly based on tab type
+            if (tabName === 'languages') {
+                activeContent.style.display = "flex"; // FORCE FLEX
+                activeContent.classList.remove('grid');
+                activeContent.classList.add('flex');
+            } else {
+                activeContent.style.display = "grid"; // FORCE GRID
+                activeContent.classList.remove('flex');
+                activeContent.classList.add('grid');
+            }
+
             // Petit delay pour trigger l'animation CSS
             setTimeout(() => activeContent.classList.add("active"), 10);
             
