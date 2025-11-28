@@ -42,19 +42,9 @@
         }
     </script>
 
-    <!-- 
-        ========================================
-        CUSTOM CSS
-        Organisé par section pour plus de clarté
-        ========================================
-    -->
     <style>
         /* --- GENERAL --- */
-        body {
-            background-color: #0f172a;
-            color: #e2e8f0;
-            overflow-x: hidden;
-        }
+        body { background-color: #0f172a; color: #e2e8f0; overflow-x: hidden; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -69,94 +59,69 @@
             background: rgba(15, 23, 42, 0.95); 
             backdrop-filter: blur(12px); 
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: top 0.3s ease-in-out; /* Animation fluide pour le scroll */
+            transition: top 0.3s ease-in-out;
         }
         .lang-icon-anim { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .lang-switch-active .lang-icon-anim { transform: rotate(360deg) scale(1.2); color: #699b71; }
 
-        /* --- TIMELINE EXPERIENCE (Ajustement précis) --- */
+        /* --- TIMELINE EXPERIENCE --- */
         .timeline-line {
             position: absolute;
-            left: 28px; /* Mobile défaut */
+            left: 28px; /* Mobile par défaut */
             top: 0;
             bottom: 0;
             width: 2px;
             background: #334155;
             z-index: 0;
         }
-        /* Flèche en haut de la timeline */
         .timeline-line::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: -4px;
-            width: 0; height: 0; 
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 8px solid #699b71;
+            content: ''; position: absolute; top: -6px; left: -4px; width: 0; height: 0; 
+            border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #699b71;
         }
-
         .timeline-connector {
-            position: absolute;
-            height: 2px;
-            background: #334155;
-            width: 30px;
-            top: 30px; /* Alignement vertical avec le point */
-            z-index: 0;
+            position: absolute; height: 2px; background: #334155; width: 20px; top: 30px; z-index: 0;
             transition: width 0.3s ease, background-color 0.3s ease;
         }
-
         .timeline-dot {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #334155;
-            border: 4px solid #0f172a;
-            border-radius: 50%;
-            z-index: 10;
-            box-shadow: 0 0 0 2px #334155;
-            top: 21px; /* Ajustement fin pour centrage vertical */
-            transition: all 0.3s ease;
+            position: absolute; width: 16px; height: 16px; background-color: #334155;
+            border: 3px solid #0f172a; border-radius: 50%; z-index: 10;
+            top: 23px; transition: all 0.3s ease;
         }
 
-        /* Desktop Layout (Desktop > 768px) */
+        /* Desktop Layout */
         @media (min-width: 768px) {
             .timeline-line { left: 50%; transform: translateX(-50%); }
-            
-            /* Items pairs (Droite) */
             .timeline-item:nth-child(even) { flex-direction: row-reverse; }
             .timeline-item:nth-child(even) .timeline-content { text-align: left; }
-            .timeline-item:nth-child(even) .timeline-connector { left: auto; right: 50%; width: 40px; margin-right: 2px; } /* Connecteur vers la droite */
+            .timeline-item:nth-child(even) .timeline-connector { left: auto; right: 50%; width: 40px; margin-right: 2px; }
             .timeline-item:nth-child(even) .timeline-dot { left: 50%; transform: translateX(-50%); }
-
-            /* Items impairs (Gauche) */
+            
             .timeline-item:nth-child(odd) .timeline-content { text-align: right; }
-            .timeline-item:nth-child(odd) .timeline-connector { left: 50%; right: auto; width: 40px; margin-left: 2px; } /* Connecteur vers la gauche */
+            .timeline-item:nth-child(odd) .timeline-connector { left: 50%; right: auto; width: 40px; margin-left: 2px; }
             .timeline-item:nth-child(odd) .timeline-dot { left: 50%; transform: translateX(-50%); }
-             
             .timeline-item:nth-child(odd) .timeline-content .tags-container { justify-content: flex-end; }
+            
+            .timeline-dot { width: 20px; height: 20px; border-width: 4px; top: 21px; }
         }
 
         /* Mobile Layout */
         @media (max-width: 768px) {
-            .timeline-item { flex-direction: row !important; padding-left: 60px; text-align: left !important; }
-            .timeline-dot { left: 19px !important; transform: none !important; }
+            .timeline-item { flex-direction: row !important; padding-left: 50px; text-align: left !important; }
+            .timeline-dot { left: 21px !important; transform: none !important; }
             .timeline-content { width: 100% !important; text-align: left !important; }
             .tags-container { justify-content: flex-start !important; }
-            .timeline-connector { left: 28px; width: 32px; }
+            .timeline-connector { left: 28px; width: 22px; }
         }
 
-        /* Hitbox & Hover Effect - Activation uniquement au survol du contenu ou du point */
+        /* Hitbox & Hover */
         .timeline-content:hover { border-color: #699b71; transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(105, 155, 113, 0.15); }
-        
-        /* Quand on survole la carte, on allume le connecteur et le point correspondant */
         .timeline-item:hover .timeline-dot { background-color: #699b71; box-shadow: 0 0 0 4px rgba(105, 155, 113, 0.3); border-color: #0f172a; }
         .timeline-item:hover .timeline-connector { background-color: #699b71; }
 
         /* --- PROJECTS --- */
         .project-card { cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(105, 155, 113, 0.2); }
-        .project-link-overlay { position: absolute; inset: 0; z-index: 20; } /* Lien qui couvre toute la carte */
+        .project-link-overlay { position: absolute; inset: 0; z-index: 20; }
 
         /* --- TABS --- */
         .tab-btn { transition: all 0.3s ease; }
@@ -173,11 +138,11 @@
 <body class="antialiased">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 nav-glass" id="navbar">
+    <nav class="fixed w-full z-50 nav-glass pt-2 md:pt-0" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
-                <!-- Logo (Refresh Page) -->
+                <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group" onclick="location.reload()">
                     <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-lg shadow-green-900/20 group-hover:scale-105 transition-transform">
                         <img src="./assets/profile-pic.png" alt="Lorenzo Profile" class="w-full h-full object-cover">
@@ -211,19 +176,20 @@
                     <!-- Language Switcher -->
                     <button id="lang-btn-desktop" onclick="toggleLanguage()" class="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-700 hover:border-primary bg-dark/50 hover:bg-card transition-all">
                         <i class="fas fa-globe text-gray-400 group-hover:text-primary lang-icon-anim"></i> 
-                        <span id="lang-display" class="text-xs font-bold text-gray-300 group-hover:text-white">EN</span>
+                        <span id="lang-display" class="text-xs font-bold text-gray-300 group-hover:text-white">FR</span>
                     </button>
 
                     <!-- Resume Button -->
-                    <a href="./assets/RESUME_Lorenzo_MARROCCHI_Internship_2025.pdf" target="_blank" class="px-5 py-2 rounded-lg bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-white transition-all text-sm font-bold shadow-lg shadow-green-900/10" data-i18n="nav_resume">
+                    <a href="./assets/CV_Lorenzo_MARROCCHI.pdf" target="_blank" class="resume-link px-5 py-2 rounded-lg bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-white transition-all text-sm font-bold shadow-lg shadow-green-900/10" data-i18n="nav_resume">
                         Mon CV
                     </a>
                 </div>
 
                 <!-- Mobile Controls -->
                 <div class="md:hidden flex items-center gap-4">
-                    <button id="lang-btn-mobile" onclick="toggleLanguage()" class="p-2 text-gray-300 hover:text-primary transition-colors">
+                    <button id="lang-btn-mobile" onclick="toggleLanguage()" class="p-2 text-gray-300 hover:text-primary transition-colors flex items-center gap-1">
                         <i class="fas fa-globe text-xl lang-icon-anim"></i>
+                        <span id="lang-display-mobile" class="text-xs font-bold">FR</span>
                     </button>
                     <button onclick="toggleMobileMenu()" class="p-2 text-gray-300 hover:text-white transition-colors focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
@@ -240,13 +206,13 @@
                 <a href="#experience" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_exp">Parcours</a>
                 <a href="#skills" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_skills">Compétences</a>
                 <a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_contact">Contact</a>
-                <a href="./assets/RESUME_Lorenzo_MARROCCHI_Internship_2025.pdf" target="_blank" class="block mt-4 mx-8 px-3 py-3 rounded-lg bg-primary text-white font-bold shadow-lg" data-i18n="nav_resume">Télécharger CV</a>
+                <a href="./assets/CV_Lorenzo_MARROCCHI.pdf" target="_blank" class="resume-link block mt-4 mx-8 px-3 py-3 rounded-lg bg-primary text-white font-bold shadow-lg" data-i18n="nav_resume">Mon CV</a>
             </div>
         </div>
     </nav>
 
     <!-- About Section -->
-    <section id="about" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-dark">
+    <section id="about" class="min-h-screen flex items-center justify-center pt-24 pb-24 md:pb-0 relative overflow-hidden bg-dark">
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
 
@@ -266,7 +232,7 @@
                         Ingénieur Systèmes Embarqués
                     </h2>
                     <p class="text-gray-400 max-w-lg mb-8 leading-relaxed text-lg" data-i18n="hero_desc">
-                        Ingénieur en systèmes embarqués de 23 ans, diplômé de l’École Centrale d’Électronique. Je suis ouvert à toute opportunité.
+                        Étudiant de 22 ans en Systèmes Embarqués à l'ECE Paris. Passionné par la fusion de l'électronique et de l'informatique, je conçois des solutions innovantes.
                     </p>
                     
                     <div class="flex flex-wrap gap-4">
@@ -313,7 +279,6 @@
                 
                 <!-- Project: Bluexplorer -->
                 <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <!-- Overlay Link (Makes whole card clickable) -->
                     <a href="https://en.wikipedia.org/wiki/Unmanned_underwater_vehicle" target="_blank" class="project-link-overlay"></a>
                     
                     <div class="h-56 relative overflow-hidden bg-slate-800">
@@ -358,7 +323,7 @@
 
                 <!-- Project: Robot Arm -->
                 <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="#" class="project-link-overlay"></a> <!-- Add Link Here -->
+                    <a href="#" class="project-link-overlay"></a> 
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                          <div class="absolute inset-0 flex items-center justify-center">
                             <i class="fas fa-robot text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
@@ -513,8 +478,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Professional Experience -->
-            <div class="mb-24">
-                <div class="text-center mb-16">
+            <div class="mb-16 md:mb-24">
+                <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl font-bold text-white mb-4 flex items-center justify-center gap-3">
                         <i class="fas fa-briefcase text-primary"></i> <span data-i18n="title_exp">Expériences Professionnelles</span>
                     </h2>
@@ -526,7 +491,7 @@
                     <div class="timeline-line"></div>
 
                     <!-- Job 1: Airbus -->
-                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                    <div class="timeline-item flex justify-between items-center w-full mb-8 md:mb-12 relative">
                         <div class="w-full md:w-[45%]"></div> 
                         <div class="timeline-connector"></div> 
                         <div class="timeline-dot"></div>
@@ -547,7 +512,7 @@
                     </div>
 
                     <!-- Job 2: Maker FabLab -->
-                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                    <div class="timeline-item flex justify-between items-center w-full mb-8 md:mb-12 relative">
                         <div class="w-full md:w-[45%]"></div>
                         <div class="timeline-connector"></div>
                         <div class="timeline-dot"></div>
@@ -565,7 +530,7 @@
                     </div>
 
                     <!-- Job 3: Parrot -->
-                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                    <div class="timeline-item flex justify-between items-center w-full mb-8 md:mb-12 relative">
                         <div class="w-full md:w-[45%]"></div>
                         <div class="timeline-connector"></div>
                         <div class="timeline-dot"></div>
@@ -584,7 +549,7 @@
                     </div>
 
                     <!-- Job 4: Assistant -->
-                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                    <div class="timeline-item flex justify-between items-center w-full mb-8 md:mb-12 relative">
                         <div class="w-full md:w-[45%]"></div>
                         <div class="timeline-connector"></div>
                         <div class="timeline-dot"></div>
@@ -598,7 +563,7 @@
                     </div>
                      
                     <!-- Job 5 & 6 -->
-                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                    <div class="timeline-item flex justify-between items-center w-full mb-8 md:mb-12 relative">
                         <div class="w-full md:w-[45%]"></div>
                         <div class="timeline-connector"></div>
                         <div class="timeline-dot"></div>
@@ -627,7 +592,7 @@
                     <div class="timeline-line bg-blue-900/40"></div>
 
                     <!-- Edu 1 -->
-                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                    <div class="timeline-item flex justify-between items-center w-full mb-8 md:mb-12 relative">
                         <div class="w-full md:w-[45%]"></div>
                         <div class="timeline-connector bg-blue-900/40"></div>
                         <div class="timeline-dot" style="border-color: #0f172a; background-color: #3b82f6;"></div>
@@ -641,7 +606,7 @@
                     </div>
 
                     <!-- Edu 2 -->
-                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                    <div class="timeline-item flex justify-between items-center w-full mb-8 md:mb-12 relative">
                         <div class="w-full md:w-[45%]"></div>
                         <div class="timeline-connector bg-blue-900/40"></div>
                         <div class="timeline-dot" style="border-color: #0f172a; background-color: #3b82f6;"></div>
@@ -669,117 +634,117 @@
             </div>
 
             <!-- Tab Navigation -->
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="openTab(event, 'embedded')" class="tab-btn active px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_embedded">
-                    <i class="fas fa-microchip"></i> Systèmes Embarqués
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
+                <button onclick="openTab(event, 'embedded')" class="tab-btn active px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_embedded">
+                    <i class="fas fa-microchip"></i> <span class="hidden md:inline">Systèmes</span> Embarqués
                 </button>
-                <button onclick="openTab(event, 'software')" class="tab-btn px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_software">
+                <button onclick="openTab(event, 'software')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_software">
                     <i class="fas fa-code"></i> Software & IA
                 </button>
-                <button onclick="openTab(event, 'tools')" class="tab-btn px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_tools">
-                    <i class="fas fa-tools"></i> Outils & Design
+                <button onclick="openTab(event, 'tools')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_tools">
+                    <i class="fas fa-tools"></i> Outils
                 </button>
-                <button onclick="openTab(event, 'languages')" class="tab-btn px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_languages">
+                <button onclick="openTab(event, 'languages')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_languages">
                     <i class="fas fa-language"></i> Langues
                 </button>
             </div>
 
             <!-- Tab Contents Container -->
-            <div class="bg-card rounded-3xl p-8 md:p-12 border border-gray-800 shadow-2xl min-h-[350px]">
+            <div class="bg-card rounded-3xl p-6 md:p-12 border border-gray-800 shadow-2xl min-h-[350px]">
                 
                 <!-- CONTENT: Embedded -->
-                <div id="embedded" class="tab-content active grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-labview-plain text-6xl text-yellow-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">LabVIEW</span>
+                <div id="embedded" class="tab-content active grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 text-center">
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-labview-plain text-4xl md:text-6xl text-yellow-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">LabVIEW</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-c-plain text-6xl text-blue-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">C / C++</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-c-plain text-4xl md:text-6xl text-blue-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">C / C++</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-arduino-plain text-6xl text-teal-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Arduino</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-arduino-plain text-4xl md:text-6xl text-teal-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Arduino</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-raspberrypi-line text-6xl text-red-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Raspberry Pi</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-raspberrypi-line text-4xl md:text-6xl text-red-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Raspberry Pi</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/fpga.png" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="FPGA">
-                        <span class="font-medium text-gray-200">FPGA / Vivado</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/fpga.png" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="FPGA">
+                        <span class="text-xs md:text-base font-medium text-gray-200">FPGA / Vivado</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/assembly.png" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="Assembly">
-                        <span class="font-medium text-gray-200">Assembly</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/assembly.png" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="Assembly">
+                        <span class="text-xs md:text-base font-medium text-gray-200">Assembly</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-linux-plain text-6xl text-white mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Linux / Unix</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-linux-plain text-4xl md:text-6xl text-white mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Linux / Unix</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/kicad.png" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="KiCad">
-                        <span class="font-medium text-gray-200">KiCad</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/kicad.png" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="KiCad">
+                        <span class="text-xs md:text-base font-medium text-gray-200">KiCad</span>
                     </div>
                 </div>
 
                 <!-- CONTENT: Software -->
-                <div id="software" class="tab-content grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-python-plain text-6xl text-yellow-300 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Python</span>
+                <div id="software" class="tab-content grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 text-center">
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-python-plain text-4xl md:text-6xl text-yellow-300 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Python</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-pytorch-original text-6xl text-orange-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">PyTorch</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-pytorch-original text-4xl md:text-6xl text-orange-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">PyTorch</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-tensorflow-original text-6xl text-orange-400 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">TensorFlow</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-tensorflow-original text-4xl md:text-6xl text-orange-400 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">TensorFlow</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-opencv-plain text-6xl text-green-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">OpenCV</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-opencv-plain text-4xl md:text-6xl text-green-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">OpenCV</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-html5-plain text-6xl text-orange-600 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">HTML5</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-html5-plain text-4xl md:text-6xl text-orange-600 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">HTML5</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-css3-plain text-6xl text-blue-600 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">CSS3</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-css3-plain text-4xl md:text-6xl text-blue-600 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">CSS3</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/qiskit.svg" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="Qiskit">
-                        <span class="font-medium text-gray-200">Qiskit</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/qiskit.svg" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="Qiskit">
+                        <span class="text-xs md:text-base font-medium text-gray-200">Qiskit</span>
                     </div>
                 </div>
                 
                 <!-- CONTENT: Tools -->
-                <div id="tools" class="tab-content grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-git-plain text-6xl text-red-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Git</span>
+                <div id="tools" class="tab-content grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 text-center">
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-git-plain text-4xl md:text-6xl text-red-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Git</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-vscode-plain text-6xl text-blue-400 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">VS Code</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-vscode-plain text-4xl md:text-6xl text-blue-400 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">VS Code</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-jira-plain text-6xl text-blue-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Jira</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-jira-plain text-4xl md:text-6xl text-blue-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Jira</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-anaconda-original text-6xl text-green-500 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Anaconda</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-anaconda-original text-4xl md:text-6xl text-green-500 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Anaconda</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-illustrator-plain text-6xl text-orange-600 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">Illustrator</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-illustrator-plain text-4xl md:text-6xl text-orange-600 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">Illustrator</span>
                     </div>
-                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <i class="devicon-aftereffects-plain text-6xl text-purple-700 mb-4 block group-hover:scale-110 transition-transform"></i>
-                        <span class="font-medium text-gray-200">After Effects</span>
+                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-aftereffects-plain text-4xl md:text-6xl text-purple-700 mb-2 md:mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs md:text-base font-medium text-gray-200">After Effects</span>
                     </div>
                 </div>
 
@@ -871,15 +836,20 @@
         });
 
         // --- TRANSLATION DATA ---
+        const cvLinks = {
+            fr: "./assets/CV_Lorenzo_MARROCCHI.pdf",
+            en: "./assets/RESUME_Lorenzo_MARROCCHI_Internship_2025.pdf"
+        };
+
         const translations = {
             fr: {
                 nav_about: "À propos", nav_skills: "Compétences", nav_exp: "Parcours", nav_projects: "Projets", nav_contact: "Contact", nav_resume: "Mon CV",
                 hero_greeting: "Bonjour, je m'appelle",
                 hero_role: "Ingénieur Systèmes Embarqués",
-                hero_desc: "Ingénieur en systèmes embarqués de 23 ans, diplômé de l’École Centrale d’Électronique. Je suis ouvert à toute opportunité.",
+                hero_desc: "Étudiant de 22 ans en Systèmes Embarqués à l'ECE Paris. Passionné par la fusion de l'électronique et de l'informatique. Je suis ouvert à toute opportunité.",
                 btn_projects: "Voir mes projets", btn_contact: "Me contacter",
                 title_skills: "Mes Compétences",
-                tab_embedded: "Systèmes Embarqués", tab_software: "Software & IA", tab_tools: "Outils & Design", tab_languages: "Langues",
+                tab_embedded: "Systèmes Embarqués", tab_software: "Software & IA", tab_tools: "Outils", tab_languages: "Langues",
                 lang_native: "Langue Maternelle", lang_fluent: "Courant (TOEIC 855)", lang_bilingual: "Bilingue",
                 lang_fr: "Français", lang_en: "Anglais", lang_it: "Italien",
                 title_exp: "Expériences Professionnelles", title_edu: "Formation",
@@ -910,10 +880,10 @@
                 nav_about: "About", nav_skills: "Skills", nav_exp: "Experience", nav_projects: "Projects", nav_contact: "Contact", nav_resume: "Resume",
                 hero_greeting: "Hi, I am",
                 hero_role: "Embedded Systems Engineer",
-                hero_desc: "23-year-old Embedded Systems engineer, graduate of ECE Paris. I am open to any opportunity.",
+                hero_desc: "22-year-old Embedded Systems student at ECE Paris. Passionate about the fusion of electronics and computer science. Open to new opportunities.",
                 btn_projects: "See my projects", btn_contact: "Contact me",
                 title_skills: "My Skills",
-                tab_embedded: "Embedded Systems", tab_software: "Software & AI", tab_tools: "Tools & Design", tab_languages: "Languages",
+                tab_embedded: "Embedded Systems", tab_software: "Software & AI", tab_tools: "Tools", tab_languages: "Languages",
                 lang_native: "Native Speaker", lang_fluent: "Fluent (TOEIC 855)", lang_bilingual: "Bilingual",
                 lang_fr: "French", lang_en: "English", lang_it: "Italian",
                 title_exp: "Work Experience", title_edu: "Education",
@@ -955,7 +925,11 @@
 
             // Switch logic
             currentLang = currentLang === 'fr' ? 'en' : 'fr';
-            document.getElementById('lang-display').textContent = currentLang.toUpperCase();
+            
+            // Update Lang Buttons Text
+            const langText = currentLang.toUpperCase();
+            if(document.getElementById('lang-display')) document.getElementById('lang-display').textContent = langText;
+            if(document.getElementById('lang-display-mobile')) document.getElementById('lang-display-mobile').textContent = langText;
             
             // Apply Translations
             document.querySelectorAll('[data-i18n]').forEach(element => {
@@ -968,6 +942,12 @@
                         element.style.opacity = '1';
                     }, 200);
                 }
+            });
+
+            // Update CV Link based on language
+            const newCvLink = cvLinks[currentLang];
+            document.querySelectorAll('.resume-link').forEach(link => {
+                link.href = newCvLink;
             });
 
             // Remove animation class after delay
