@@ -12,10 +12,10 @@
 </h1>
 
 <p align="center">
-  The first iteration of <a href="https://lorenzomarrocchi.com/" target="_blank">lorenzomarrocchi.com</a> hosted with <a href="https://www.netlify.com/" target="_blank">Netlify</a>
+  The 2025 iteration of <a href="https://lorenzomarrocchi.com/" target="_blank">lorenzomarrocchi.com</a> hosted with <a href="https://www.netlify.com/" target="_blank">Netlify</a>
 </p>
 <p align="center">
-This project is a website portfolio created to introduce myself and present my projects. It's a responsive website built using HTML, CSS, and JavaScript.
+This project is a website portfolio created to introduce myself and present my projects. Fully responsive, featuring dark mode, multi-language support (FR/EN), and interactive tabs. Built with HTML5, Tailwind CSS, and Vanilla JS.
 </p>
 
 <p align="center">
