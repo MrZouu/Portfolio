@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorenzo Marrocchi | Ingénieur Systèmes Embarqués</title>
+    <link rel="shortcut icon" href="./assets/profile-pic.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#699b71',
+                        secondary: '#4ade80',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        card: '#1e293b',
+                        text: '#e2e8f0',
+                        muted: '#94a3b8'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 
+        ========================================
+        CUSTOM CSS
+        Organisé par section pour plus de clarté
+        ========================================
+    -->
+    <style>
+        /* --- GENERAL --- */
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #699b71; }
+
+        /* --- ANIMATIONS --- */
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NAVIGATION --- */
+        .nav-glass { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: top 0.3s ease-in-out; /* Animation fluide pour le scroll */
+        }
+        .lang-icon-anim { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .lang-switch-active .lang-icon-anim { transform: rotate(360deg) scale(1.2); color: #699b71; }
+
+        /* --- TIMELINE EXPERIENCE (Ajustement précis) --- */
+        .timeline-line {
+            position: absolute;
+            left: 28px; /* Mobile défaut */
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #334155;
+            z-index: 0;
+        }
+        /* Flèche en haut de la timeline */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -4px;
+            width: 0; height: 0; 
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 8px solid #699b71;
+        }
+
+        .timeline-connector {
+            position: absolute;
+            height: 2px;
+            background: #334155;
+            width: 30px;
+            top: 30px; /* Alignement vertical avec le point */
+            z-index: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #334155;
+            border: 4px solid #0f172a;
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 0 0 2px #334155;
+            top: 21px; /* Ajustement fin pour centrage vertical */
+            transition: all 0.3s ease;
+        }
+
+        /* Desktop Layout (Desktop > 768px) */
+        @media (min-width: 768px) {
+            .timeline-line { left: 50%; transform: translateX(-50%); }
+            
+            /* Items pairs (Droite) */
+            .timeline-item:nth-child(even) { flex-direction: row-reverse; }
+            .timeline-item:nth-child(even) .timeline-content { text-align: left; }
+            .timeline-item:nth-child(even) .timeline-connector { left: auto; right: 50%; width: 40px; margin-right: 2px; } /* Connecteur vers la droite */
+            .timeline-item:nth-child(even) .timeline-dot { left: 50%; transform: translateX(-50%); }
+
+            /* Items impairs (Gauche) */
+            .timeline-item:nth-child(odd) .timeline-content { text-align: right; }
+            .timeline-item:nth-child(odd) .timeline-connector { left: 50%; right: auto; width: 40px; margin-left: 2px; } /* Connecteur vers la gauche */
+            .timeline-item:nth-child(odd) .timeline-dot { left: 50%; transform: translateX(-50%); }
+             
+            .timeline-item:nth-child(odd) .timeline-content .tags-container { justify-content: flex-end; }
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 768px) {
+            .timeline-item { flex-direction: row !important; padding-left: 60px; text-align: left !important; }
+            .timeline-dot { left: 19px !important; transform: none !important; }
+            .timeline-content { width: 100% !important; text-align: left !important; }
+            .tags-container { justify-content: flex-start !important; }
+            .timeline-connector { left: 28px; width: 32px; }
+        }
+
+        /* Hitbox & Hover Effect - Activation uniquement au survol du contenu ou du point */
+        .timeline-content:hover { border-color: #699b71; transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(105, 155, 113, 0.15); }
+        
+        /* Quand on survole la carte, on allume le connecteur et le point correspondant */
+        .timeline-item:hover .timeline-dot { background-color: #699b71; box-shadow: 0 0 0 4px rgba(105, 155, 113, 0.3); border-color: #0f172a; }
+        .timeline-item:hover .timeline-connector { background-color: #699b71; }
+
+        /* --- PROJECTS --- */
+        .project-card { cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(105, 155, 113, 0.2); }
+        .project-link-overlay { position: absolute; inset: 0; z-index: 20; } /* Lien qui couvre toute la carte */
+
+        /* --- TABS --- */
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn.active { background-color: #699b71; color: white; border-color: #699b71; box-shadow: 0 4px 12px rgba(105, 155, 113, 0.3); }
+        .tab-content { display: none; animation: fadeInTabs 0.5s ease; }
+        .tab-content.active { display: grid; }
+        @keyframes fadeInTabs { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CONTACT --- */
+        .social-icon-wrapper { position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .social-icon-wrapper:hover { transform: translateY(-5px); color: #699b71; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 nav-glass" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo (Refresh Page) -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group" onclick="location.reload()">
+                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-lg shadow-green-900/20 group-hover:scale-105 transition-transform">
+                        <img src="./assets/profile-pic.png" alt="Lorenzo Profile" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-xl font-bold text-white tracking-tight hidden sm:block group-hover:text-primary transition-colors">Lorenzo<span class="text-primary group-hover:text-white">.</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-sm font-medium text-gray-300 hover:text-primary transition-colors relative group">
+                        <span data-i18n="nav_about">À propos</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#projects" class="text-sm font-medium text-gray-300 hover:text-primary transition-colors relative group">
+                        <span data-i18n="nav_projects">Projets</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#experience" class="text-sm font-medium text-gray-300 hover:text-primary transition-colors relative group">
+                        <span data-i18n="nav_exp">Parcours</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#skills" class="text-sm font-medium text-gray-300 hover:text-primary transition-colors relative group">
+                        <span data-i18n="nav_skills">Compétences</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#contact" class="text-sm font-medium text-gray-300 hover:text-primary transition-colors relative group">
+                        <span data-i18n="nav_contact">Contact</span>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+                    </a>
+                    
+                    <!-- Language Switcher -->
+                    <button id="lang-btn-desktop" onclick="toggleLanguage()" class="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-700 hover:border-primary bg-dark/50 hover:bg-card transition-all">
+                        <i class="fas fa-globe text-gray-400 group-hover:text-primary lang-icon-anim"></i> 
+                        <span id="lang-display" class="text-xs font-bold text-gray-300 group-hover:text-white">EN</span>
+                    </button>
+
+                    <!-- Resume Button -->
+                    <a href="./assets/RESUME_Lorenzo_MARROCCHI_Internship_2025.pdf" target="_blank" class="px-5 py-2 rounded-lg bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-white transition-all text-sm font-bold shadow-lg shadow-green-900/10" data-i18n="nav_resume">
+                        Mon CV
+                    </a>
+                </div>
+
+                <!-- Mobile Controls -->
+                <div class="md:hidden flex items-center gap-4">
+                    <button id="lang-btn-mobile" onclick="toggleLanguage()" class="p-2 text-gray-300 hover:text-primary transition-colors">
+                        <i class="fas fa-globe text-xl lang-icon-anim"></i>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="p-2 text-gray-300 hover:text-white transition-colors focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-card/95 backdrop-blur-xl border-b border-gray-700 absolute w-full left-0 top-20 shadow-2xl">
+            <div class="px-4 pt-4 pb-6 space-y-2 text-center">
+                <a href="#about" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_about">À propos</a>
+                <a href="#projects" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_projects">Projets</a>
+                <a href="#experience" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_exp">Parcours</a>
+                <a href="#skills" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_skills">Compétences</a>
+                <a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-gray-700/50 hover:text-primary" data-i18n="nav_contact">Contact</a>
+                <a href="./assets/RESUME_Lorenzo_MARROCCHI_Internship_2025.pdf" target="_blank" class="block mt-4 mx-8 px-3 py-3 rounded-lg bg-primary text-white font-bold shadow-lg" data-i18n="nav_resume">Télécharger CV</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <section id="about" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-dark">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                
+                <!-- Text -->
+                <div class="order-2 md:order-1 fade-in">
+                    <p class="text-primary font-medium mb-3 tracking-wide flex items-center gap-2">
+                        <span class="w-8 h-[2px] bg-primary inline-block"></span>
+                        <span data-i18n="hero_greeting">Bonjour, je m'appelle</span>
+                    </p>
+                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+                        Lorenzo<br><span class="text-muted">Marrocchi.</span>
+                    </h1>
+                    <h2 class="text-2xl md:text-3xl text-gray-400 mb-6 font-light" data-i18n="hero_role">
+                        Ingénieur Systèmes Embarqués
+                    </h2>
+                    <p class="text-gray-400 max-w-lg mb-8 leading-relaxed text-lg" data-i18n="hero_desc">
+                        Ingénieur en systèmes embarqués de 23 ans, diplômé de l’École Centrale d’Électronique. Je suis ouvert à toute opportunité.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#projects" class="px-8 py-4 bg-primary text-white rounded-lg hover:bg-green-700 transition-all font-semibold shadow-lg shadow-primary/25 transform hover:-translate-y-1" data-i18n="btn_projects">
+                            Voir mes projets
+                        </a>
+                        <a href="#contact" class="px-8 py-4 border border-gray-600 text-white rounded-lg hover:border-primary hover:text-primary transition-all font-semibold" data-i18n="btn_contact">
+                            Me contacter
+                        </a>
+                    </div>
+
+                    <div class="mt-10 flex gap-6 text-2xl text-gray-500">
+                        <a href="https://github.com/MrZouu/" target="_blank" class="hover:text-white hover:scale-110 transition-all"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/lorenzo-marrocchi/" target="_blank" class="hover:text-blue-400 hover:scale-110 transition-all"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:lorenzomarrocchi02@gmail.com" class="hover:text-primary hover:scale-110 transition-all"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Image -->
+                <div class="order-1 md:order-2 flex justify-center relative fade-in" style="animation-delay: 0.2s;">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 group">
+                        <div class="absolute inset-0 border-2 border-primary rounded-full transform translate-x-4 translate-y-4 opacity-30 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500"></div>
+                        <div class="absolute inset-0 bg-card rounded-full overflow-hidden shadow-2xl border border-gray-700 group-hover:border-primary transition-colors duration-500">
+                            <img src="./assets/profile-pic.png" alt="Lorenzo" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-darker relative">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="title_projects">Mes Projets</h2>
+                <div class="w-20 h-1.5 bg-primary mx-auto rounded-full mb-6"></div>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg" data-i18n="subtitle_projects">Une sélection de ce que j'ai construit.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                
+                <!-- Project: Bluexplorer -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <!-- Overlay Link (Makes whole card clickable) -->
+                    <a href="https://en.wikipedia.org/wiki/Unmanned_underwater_vehicle" target="_blank" class="project-link-overlay"></a>
+                    
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-water text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                        <img src="./assets/projects/Bluexplorer.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Bluexplorer</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_blue_desc">Prototype de drone sous-marin pour l'exploration. Conception mécanique et électronique.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Embedded</span>
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Python</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: SmoothTalk -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="https://github.com/MrZouu/SmoothTalk" target="_blank" class="project-link-overlay"></a>
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                             <i class="fas fa-sign-language text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                        <img src="./assets/projects/SmoothTalkCover.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">SmoothTalk</h3>
+                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_smooth_desc">Traduction de la langue des signes en temps réel via webcam et Deep Learning.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">PyTorch</span>
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">OpenCV</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Robot Arm -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="#" class="project-link-overlay"></a> <!-- Add Link Here -->
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                         <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-robot text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Robot Arm Control</h3>
+                            <span class="text-xs border border-primary text-primary px-2 py-1 rounded">Hackathon</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_robot_desc">Interface gestuelle pour bras robotisé. Hackathon Hugging Face 2025.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">AI</span>
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Robotics</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Radio Transmitter -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="https://github.com/MrZouu/Radio-Transmitter" target="_blank" class="project-link-overlay"></a>
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-broadcast-tower text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Radio Transmitter</h3>
+                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_radio_desc">Télécommande sans fil pour piloter divers projets.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Arduino</span>
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C++</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Battleship -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="https://github.com/MrZouu/Battleship" target="_blank" class="project-link-overlay"></a>
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-ship text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Battleship</h3>
+                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_battle_desc">Version console simplifiée de la bataille navale.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Game of Life -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="https://github.com/MrZouu/Game-of-Life" target="_blank" class="project-link-overlay"></a>
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-dna text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Game of Life</h3>
+                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_life_desc">Implémentation du jeu de la vie de Conway.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Air Traffic -->
+                 <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="https://github.com/MrZouu/Air_traffic_control_simulation" target="_blank" class="project-link-overlay"></a>
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-plane text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Air Traffic Control</h3>
+                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_air_desc">Simulation 2D de contrôle aérien.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C++</span>
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Allegro</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Space Invaders -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="https://github.com/MrZouu/Space_Invaders" target="_blank" class="project-link-overlay"></a>
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                       <div class="absolute inset-0 flex items-center justify-center">
+                           <i class="fas fa-space-shuttle text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                       </div>
+                   </div>
+                   <div class="p-8 flex-grow flex flex-col">
+                       <div class="flex justify-between items-start mb-4">
+                           <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Space Invaders</h3>
+                           <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                       </div>
+                       <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_space_desc">Jeu classique Space Invaders utilisant Pygame.</p>
+                       <div class="flex flex-wrap gap-2 mt-auto">
+                           <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Python</span>
+                           <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Pygame</span>
+                       </div>
+                   </div>
+               </div>
+
+                <!-- Project: Portfolio -->
+                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
+                    <a href="https://github.com/MrZouu/Portfolio" target="_blank" class="project-link-overlay"></a>
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-laptop-code text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Portfolio</h3>
+                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_web_desc">Ce site web personnel.</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">HTML</span>
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">CSS</span>
+                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">JS</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24 bg-dark relative">
+         <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Professional Experience -->
+            <div class="mb-24">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-white mb-4 flex items-center justify-center gap-3">
+                        <i class="fas fa-briefcase text-primary"></i> <span data-i18n="title_exp">Expériences Professionnelles</span>
+                    </h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                </div>
+
+                <div class="relative max-w-6xl mx-auto">
+                    <!-- Vertical Timeline Line -->
+                    <div class="timeline-line"></div>
+
+                    <!-- Job 1: Airbus -->
+                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                        <div class="w-full md:w-[45%]"></div> 
+                        <div class="timeline-connector"></div> 
+                        <div class="timeline-dot"></div>
+                        
+                        <div class="timeline-content w-full md:w-[45%] bg-card p-6 md:p-8 rounded-xl border border-primary/50 shadow-lg relative transition-all duration-300 transform">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="inline-block px-3 py-1 bg-primary text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-lg">Mars 2025 - Sept 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="job1_title">Ingénieur Développement Système</h3>
+                            <h4 class="text-lg text-secondary mb-3">AIRBUS Defence & Space</h4>
+                            <p class="text-gray-400 text-sm mb-4 leading-relaxed" data-i18n="job1_desc">Stage de fin d'études : Développement d'interfaces IHM pour équipements GSE. Couplage d'hexapodes et rétro-ingénierie.</p>
+                            <div class="tags-container flex flex-wrap gap-2 mt-auto">
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">LabVIEW</span>
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">IHM Aérospatiale</span>
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">Python</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job 2: Maker FabLab -->
+                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                        <div class="w-full md:w-[45%]"></div>
+                        <div class="timeline-connector"></div>
+                        <div class="timeline-dot"></div>
+                        
+                        <div class="timeline-content w-full md:w-[45%] bg-card p-6 md:p-8 rounded-xl border border-gray-700 shadow-lg relative transition-all duration-300">
+                            <span class="inline-block px-3 py-1 bg-gray-700 text-gray-300 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">2024 - 2025</span>
+                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="job2_title">Maker - Fablab</h3>
+                            <h4 class="text-lg text-secondary mb-3">ECE Paris</h4>
+                            <p class="text-gray-400 text-sm mb-4 leading-relaxed" data-i18n="job2_desc">Aide aux étudiants, formations imprimantes 3D, découpeuse laser et outils CAO.</p>
+                            <div class="tags-container flex flex-wrap gap-2 mt-auto">
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">Prototyping</span>
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">Teaching</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job 3: Parrot -->
+                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                        <div class="w-full md:w-[45%]"></div>
+                        <div class="timeline-connector"></div>
+                        <div class="timeline-dot"></div>
+                        
+                        <div class="timeline-content w-full md:w-[45%] bg-card p-6 md:p-8 rounded-xl border border-gray-700 shadow-lg relative transition-all duration-300">
+                            <span class="inline-block px-3 py-1 bg-gray-700 text-gray-300 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Mai 2024 - Août 2024</span>
+                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="job3_title">Ingénieur Test & Validation</h3>
+                            <h4 class="text-lg text-secondary mb-3">Parrot</h4>
+                            <p class="text-gray-400 text-sm mb-4 leading-relaxed" data-i18n="job3_desc">Stage sur les microdrones. Plans de test, Python, Jira, TestRail et essais terrain.</p>
+                            <div class="tags-container flex flex-wrap gap-2 mt-auto">
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">Linux</span>
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">Python</span>
+                                <span class="px-2 py-1 bg-dark rounded text-xs text-muted font-mono">Jira</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job 4: Assistant -->
+                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                        <div class="w-full md:w-[45%]"></div>
+                        <div class="timeline-connector"></div>
+                        <div class="timeline-dot"></div>
+                        
+                        <div class="timeline-content w-full md:w-[45%] bg-card p-6 md:p-8 rounded-xl border border-gray-700 shadow-lg relative transition-all duration-300">
+                            <span class="inline-block px-3 py-1 bg-gray-700 text-gray-300 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">2023 - 2024</span>
+                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="job4_title">Assistant d'Enseignement</h3>
+                            <h4 class="text-lg text-secondary mb-3">ECE Paris</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed" data-i18n="job4_desc">Encadrement de TP en électronique et informatique (C/C++).</p>
+                        </div>
+                    </div>
+                     
+                    <!-- Job 5 & 6 -->
+                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                        <div class="w-full md:w-[45%]"></div>
+                        <div class="timeline-connector"></div>
+                        <div class="timeline-dot"></div>
+                        
+                        <div class="timeline-content w-full md:w-[45%] bg-card p-6 md:p-8 rounded-xl border border-gray-700 shadow-lg relative transition-all duration-300">
+                            <span class="inline-block px-3 py-1 bg-gray-700 text-gray-300 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">2022 - 2023</span>
+                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="job5_title">Stage Data Management</h3>
+                            <h4 class="text-lg text-secondary mb-3">Generation 123G</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed" data-i18n="job5_desc">Développement marketplace, gestion de base de données SQL et Wordpress.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div>
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-white mb-4 flex items-center justify-center gap-3">
+                        <i class="fas fa-graduation-cap text-blue-400"></i> <span data-i18n="title_edu">Formation</span>
+                    </h2>
+                    <div class="w-20 h-1 bg-blue-500 mx-auto rounded-full"></div>
+                </div>
+
+                <div class="relative max-w-6xl mx-auto">
+                    <!-- Blue Line -->
+                    <div class="timeline-line bg-blue-900/40"></div>
+
+                    <!-- Edu 1 -->
+                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                        <div class="w-full md:w-[45%]"></div>
+                        <div class="timeline-connector bg-blue-900/40"></div>
+                        <div class="timeline-dot" style="border-color: #0f172a; background-color: #3b82f6;"></div>
+                        
+                        <div class="timeline-content w-full md:w-[45%] bg-card p-6 md:p-8 rounded-xl border border-gray-700 shadow-lg relative hover:border-blue-500 transition-all duration-300">
+                            <span class="inline-block px-3 py-1 bg-blue-900/50 text-blue-300 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">2020 - 2025</span>
+                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="edu1_title">École d'Ingénieurs</h3>
+                            <h4 class="text-lg text-blue-400 mb-3">ECE Paris</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed" data-i18n="edu1_desc">Majeure Systèmes Embarqués. Option Informatique Quantique.</p>
+                        </div>
+                    </div>
+
+                    <!-- Edu 2 -->
+                    <div class="timeline-item flex justify-between items-center w-full mb-12 relative">
+                        <div class="w-full md:w-[45%]"></div>
+                        <div class="timeline-connector bg-blue-900/40"></div>
+                        <div class="timeline-dot" style="border-color: #0f172a; background-color: #3b82f6;"></div>
+                        
+                        <div class="timeline-content w-full md:w-[45%] bg-card p-6 md:p-8 rounded-xl border border-gray-700 shadow-lg relative hover:border-blue-500 transition-all duration-300">
+                            <span class="inline-block px-3 py-1 bg-blue-900/50 text-blue-300 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">2023</span>
+                            <h3 class="text-xl font-bold text-white mb-1" data-i18n="edu2_title">Semestre International</h3>
+                            <h4 class="text-lg text-blue-400 mb-3">University of Malaya (Kuala Lumpur)</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed" data-i18n="edu2_desc">Semestre d'échange en Malaisie. Cours 100% en anglais.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 bg-darker relative">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="title_skills">Mes Compétences</h2>
+                <div class="w-20 h-1.5 bg-primary mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="openTab(event, 'embedded')" class="tab-btn active px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_embedded">
+                    <i class="fas fa-microchip"></i> Systèmes Embarqués
+                </button>
+                <button onclick="openTab(event, 'software')" class="tab-btn px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_software">
+                    <i class="fas fa-code"></i> Software & IA
+                </button>
+                <button onclick="openTab(event, 'tools')" class="tab-btn px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_tools">
+                    <i class="fas fa-tools"></i> Outils & Design
+                </button>
+                <button onclick="openTab(event, 'languages')" class="tab-btn px-6 py-3 rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_languages">
+                    <i class="fas fa-language"></i> Langues
+                </button>
+            </div>
+
+            <!-- Tab Contents Container -->
+            <div class="bg-card rounded-3xl p-8 md:p-12 border border-gray-800 shadow-2xl min-h-[350px]">
+                
+                <!-- CONTENT: Embedded -->
+                <div id="embedded" class="tab-content active grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-labview-plain text-6xl text-yellow-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">LabVIEW</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-c-plain text-6xl text-blue-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">C / C++</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-arduino-plain text-6xl text-teal-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Arduino</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-raspberrypi-line text-6xl text-red-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Raspberry Pi</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/fpga.png" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="FPGA">
+                        <span class="font-medium text-gray-200">FPGA / Vivado</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/assembly.png" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="Assembly">
+                        <span class="font-medium text-gray-200">Assembly</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-linux-plain text-6xl text-white mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Linux / Unix</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/kicad.png" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="KiCad">
+                        <span class="font-medium text-gray-200">KiCad</span>
+                    </div>
+                </div>
+
+                <!-- CONTENT: Software -->
+                <div id="software" class="tab-content grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-python-plain text-6xl text-yellow-300 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Python</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-pytorch-original text-6xl text-orange-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">PyTorch</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-tensorflow-original text-6xl text-orange-400 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">TensorFlow</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-opencv-plain text-6xl text-green-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">OpenCV</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-html5-plain text-6xl text-orange-600 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">HTML5</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-css3-plain text-6xl text-blue-600 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">CSS3</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/qiskit.svg" class="w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform object-contain" alt="Qiskit">
+                        <span class="font-medium text-gray-200">Qiskit</span>
+                    </div>
+                </div>
+                
+                <!-- CONTENT: Tools -->
+                <div id="tools" class="tab-content grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-git-plain text-6xl text-red-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Git</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-vscode-plain text-6xl text-blue-400 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">VS Code</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-jira-plain text-6xl text-blue-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Jira</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-anaconda-original text-6xl text-green-500 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Anaconda</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-illustrator-plain text-6xl text-orange-600 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">Illustrator</span>
+                    </div>
+                    <div class="p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <i class="devicon-aftereffects-plain text-6xl text-purple-700 mb-4 block group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium text-gray-200">After Effects</span>
+                    </div>
+                </div>
+
+                <!-- CONTENT: Languages -->
+                <div id="languages" class="tab-content grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="p-8 bg-dark/50 rounded-xl border border-gray-700 hover:border-primary transition-colors">
+                        <span class="text-5xl block mb-4">🇫🇷</span>
+                        <h3 class="text-xl font-bold text-white mb-2" data-i18n="lang_fr">Français</h3>
+                        <p class="text-primary font-medium" data-i18n="lang_native">Langue Maternelle</p>
+                    </div>
+                    <div class="p-8 bg-dark/50 rounded-xl border border-gray-700 hover:border-primary transition-colors">
+                        <span class="text-5xl block mb-4">🇬🇧</span>
+                        <h3 class="text-xl font-bold text-white mb-2" data-i18n="lang_en">Anglais</h3>
+                        <p class="text-primary font-medium" data-i18n="lang_fluent">Courant (TOEIC 855)</p>
+                    </div>
+                    <div class="p-8 bg-dark/50 rounded-xl border border-gray-700 hover:border-primary transition-colors">
+                        <span class="text-5xl block mb-4">🇮🇹</span>
+                        <h3 class="text-xl font-bold text-white mb-2" data-i18n="lang_it">Italien</h3>
+                        <p class="text-primary font-medium" data-i18n="lang_bilingual">Bilingue</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-dark relative overflow-hidden">
+        <!-- Glow Effect Background -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary opacity-5 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <p class="text-primary font-mono mb-4 tracking-wider" data-i18n="contact_subtitle">Quelle est la suite ?</p>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-8" data-i18n="contact_title">Me Contacter</h2>
+            <p class="text-gray-400 text-lg mb-12 leading-relaxed" data-i18n="contact_text">
+                Je suis à la recherche d'opportunités (CDI/CDD) à partir de Décembre 2025.
+                Que ce soit pour une question ou juste pour dire bonjour, n'hésitez pas !
+            </p>
+            
+            <a href="mailto:lorenzomarrocchi02@gmail.com" class="inline-block px-10 py-5 bg-transparent border-2 border-primary text-primary rounded hover:bg-primary hover:text-white transition-all font-bold text-lg hover:-translate-y-1" data-i18n="btn_say_hello">
+                Dire Bonjour
+            </a>
+
+            <!-- Social Icons -->
+            <div class="mt-20 flex justify-center gap-10">
+                <a href="mailto:lorenzomarrocchi02@gmail.com" class="social-icon-wrapper flex flex-col items-center gap-2 text-gray-500">
+                    <img src="./assets/paper-plane.svg" alt="Email" class="h-10 w-10 mb-1 transition-transform" onerror="this.src='https://img.icons8.com/ios/50/94a3b8/paper-plane.png'">
+                    <span class="text-xs font-medium tracking-wide">Email</span>
+                </a>
+                <a href="https://www.linkedin.com/in/lorenzo-marrocchi/" target="_blank" class="social-icon-wrapper flex flex-col items-center gap-2 text-gray-500">
+                    <img src="./assets/linkedin-original.svg" alt="LinkedIn" class="h-10 w-10 mb-1 transition-transform" onerror="this.src='https://img.icons8.com/ios/50/94a3b8/linkedin.png'">
+                    <span class="text-xs font-medium tracking-wide">LinkedIn</span>
+                </a>
+                <a href="https://github.com/MrZouu/" target="_blank" class="social-icon-wrapper flex flex-col items-center gap-2 text-gray-500">
+                    <img src="./assets/github-outline.svg" alt="GitHub" class="h-10 w-10 mb-1 transition-transform" onerror="this.src='https://img.icons8.com/ios/50/94a3b8/github.png'">
+                    <span class="text-xs font-medium tracking-wide">GitHub</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-darker py-8 border-t border-gray-800 text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-gray-500 text-sm">
+                Designed & Built by <span class="text-primary">Lorenzo Marrocchi</span>
+                <br class="md:hidden">
+                <span class="hidden md:inline"> | </span>
+                &copy; 2025 All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- NAVBAR SCROLL EFFECT ---
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > 80) {
+                // Scroll Down -> Hide
+                navbar.style.top = "-80px";
+            } else {
+                // Scroll Up -> Show
+                navbar.style.top = "0";
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // --- TRANSLATION DATA ---
+        const translations = {
+            fr: {
+                nav_about: "À propos", nav_skills: "Compétences", nav_exp: "Parcours", nav_projects: "Projets", nav_contact: "Contact", nav_resume: "Mon CV",
+                hero_greeting: "Bonjour, je m'appelle",
+                hero_role: "Ingénieur Systèmes Embarqués",
+                hero_desc: "Ingénieur en systèmes embarqués de 23 ans, diplômé de l’École Centrale d’Électronique. Je suis ouvert à toute opportunité.",
+                btn_projects: "Voir mes projets", btn_contact: "Me contacter",
+                title_skills: "Mes Compétences",
+                tab_embedded: "Systèmes Embarqués", tab_software: "Software & IA", tab_tools: "Outils & Design", tab_languages: "Langues",
+                lang_native: "Langue Maternelle", lang_fluent: "Courant (TOEIC 855)", lang_bilingual: "Bilingue",
+                lang_fr: "Français", lang_en: "Anglais", lang_it: "Italien",
+                title_exp: "Expériences Professionnelles", title_edu: "Formation",
+                job1_title: "Ingénieur Développement Système", job1_desc: "Stage de fin d'études : Développement d'interfaces IHM pour équipements GSE. Couplage d'hexapodes et rétro-ingénierie.",
+                job2_title: "Maker - Fablab", job2_desc: "Aide aux étudiants, formations imprimantes 3D, découpeuse laser et outils CAO.",
+                job3_title: "Ingénieur Test & Validation", job3_desc: "Stage sur les microdrones. Plans de test, Python, Jira, TestRail et essais terrain.",
+                job4_title: "Assistant d'Enseignement", job4_desc: "Encadrement de TP en électronique et informatique (C/C++).",
+                job5_title: "Stage Data Management", job5_desc: "Développement marketplace, gestion de base de données SQL et Wordpress.",
+                job6_title: "Stage Logistique", job6_desc: "Logistique et livraison durable. Communication client.",
+                edu1_title: "École d'Ingénieurs", edu1_desc: "Majeure Systèmes Embarqués. Option Informatique Quantique.",
+                edu2_title: "Semestre International", edu2_desc: "Semestre d'échange en Malaisie. Cours 100% en anglais.",
+                title_projects: "Mes Projets", subtitle_projects: "Une sélection de ce que j'ai construit.",
+                proj_blue_desc: "Prototype de drone sous-marin pour l'exploration. Conception mécanique et électronique.",
+                proj_smooth_desc: "Traduction de la langue des signes en temps réel via webcam et Deep Learning.",
+                proj_robot_desc: "Interface gestuelle pour bras robotisé. Hackathon Hugging Face 2025.",
+                proj_radio_desc: "Télécommande sans fil pour piloter divers projets.",
+                proj_battle_desc: "Version console simplifiée de la bataille navale.",
+                proj_life_desc: "Implémentation du jeu de la vie de Conway.",
+                proj_air_desc: "Simulation 2D de contrôle aérien.",
+                proj_space_desc: "Jeu classique Space Invaders utilisant Pygame.",
+                proj_web_desc: "Ce site web personnel.",
+                contact_subtitle: "Quelle est la suite ?", contact_title: "Me Contacter",
+                contact_text: "Je suis à la recherche d'opportunités (CDI/CDD) à partir de Décembre 2025. Que ce soit pour une question ou juste pour dire bonjour, n'hésitez pas !",
+                btn_say_hello: "Dire Bonjour",
+                badge_current: "ACTUEL"
+            },
+            en: {
+                nav_about: "About", nav_skills: "Skills", nav_exp: "Experience", nav_projects: "Projects", nav_contact: "Contact", nav_resume: "Resume",
+                hero_greeting: "Hi, I am",
+                hero_role: "Embedded Systems Engineer",
+                hero_desc: "23-year-old Embedded Systems engineer, graduate of ECE Paris. I am open to any opportunity.",
+                btn_projects: "See my projects", btn_contact: "Contact me",
+                title_skills: "My Skills",
+                tab_embedded: "Embedded Systems", tab_software: "Software & AI", tab_tools: "Tools & Design", tab_languages: "Languages",
+                lang_native: "Native Speaker", lang_fluent: "Fluent (TOEIC 855)", lang_bilingual: "Bilingual",
+                lang_fr: "French", lang_en: "English", lang_it: "Italian",
+                title_exp: "Work Experience", title_edu: "Education",
+                job1_title: "System Development Engineer", job1_desc: "End-of-studies internship: Development of HMI interfaces for GSE equipment. Hexapod coupling and reverse engineering.",
+                job2_title: "Maker - Fablab", job2_desc: "Assisting students, training on 3D printers, laser cutters, and CAD tools.",
+                job3_title: "Test & Validation Engineer", job3_desc: "Internship on microdrones. Test plans, Python, Jira, TestRail, and field testing.",
+                job4_title: "Teaching Assistant", job4_desc: "Supervising practical work in electronics and IT (C/C++).",
+                job5_title: "Data Management Intern", job5_desc: "Marketplace development, SQL database management, and Wordpress.",
+                job6_title: "Logistics Intern", job6_desc: "Logistics and sustainable delivery. Client communication.",
+                edu1_title: "Engineering School", edu1_desc: "Major in Embedded Systems. Quantum Computing Option.",
+                edu2_title: "International Semester", edu2_desc: "Exchange semester in Malaysia. 100% English courses.",
+                title_projects: "My Projects", subtitle_projects: "A selection of things I've built.",
+                proj_blue_desc: "Underwater drone prototype for exploration. Mechanical and electronic design.",
+                proj_smooth_desc: "Real-time sign language translation via webcam using Deep Learning.",
+                proj_robot_desc: "Gesture interface for robotic arm. Hugging Face Hackathon 2025.",
+                proj_radio_desc: "Wireless remote control to pilot various projects.",
+                proj_battle_desc: "Simplified console version of Battleship.",
+                proj_life_desc: "Implementation of Conway's Game of Life.",
+                proj_air_desc: "2D Air Traffic Control simulation.",
+                proj_space_desc: "Classic Space Invaders game using Pygame.",
+                proj_web_desc: "This personal website.",
+                contact_subtitle: "What's Next?", contact_title: "Get In Touch",
+                contact_text: "I am currently looking for opportunities (Permanent/Fixed-term) starting December 2025. Whether you have a question or just want to say hi, feel free!",
+                btn_say_hello: "Say Hello",
+                badge_current: "CURRENT"
+            }
+        };
+
+        let currentLang = 'fr';
+
+        function toggleLanguage() {
+            // Animation logic
+            const btnDesktop = document.getElementById('lang-btn-desktop');
+            const btnMobile = document.getElementById('lang-btn-mobile');
+            
+            // Add animation class
+            if(btnDesktop) btnDesktop.classList.add('lang-switch-active');
+            if(btnMobile) btnMobile.classList.add('lang-switch-active');
+
+            // Switch logic
+            currentLang = currentLang === 'fr' ? 'en' : 'fr';
+            document.getElementById('lang-display').textContent = currentLang.toUpperCase();
+            
+            // Apply Translations
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    // Fade out/in effect for smoother text transition
+                    element.style.opacity = '0';
+                    setTimeout(() => {
+                        element.textContent = translations[currentLang][key];
+                        element.style.opacity = '1';
+                    }, 200);
+                }
+            });
+
+            // Remove animation class after delay
+            setTimeout(() => {
+                if(btnDesktop) btnDesktop.classList.remove('lang-switch-active');
+                if(btnMobile) btnMobile.classList.remove('lang-switch-active');
+            }, 500);
+        }
+
+        // --- MENU MOBILE ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- TABS LOGIC ---
+        function openTab(evt, tabName) {
+            var i, tabContent, tabBtn;
+            
+            // Hide all content
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+                tabContent[i].style.display = "none";
+            }
+            
+            // Reset buttons
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+                tabBtn[i].classList.remove("bg-primary", "text-white", "border-primary");
+                tabBtn[i].classList.add("text-gray-300");
+            }
+            
+            // Show target
+            const activeContent = document.getElementById(tabName);
+            activeContent.style.display = "grid";
+            // Petit delay pour trigger l'animation CSS
+            setTimeout(() => activeContent.classList.add("active"), 10);
+            
+            // Style active button
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
