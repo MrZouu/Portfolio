@@ -168,6 +168,46 @@
         /* --- CONTACT --- */
         .social-icon-wrapper { position: relative; overflow: hidden; transition: all 0.3s ease; }
         .social-icon-wrapper:hover { transform: translateY(-5px); color: #699b71; }
+
+        /* --- PROJECT EXPANSION --- */
+        #project-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 60; pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #project-overlay.open {
+            opacity: 1; visibility: visible;
+            background: rgba(15, 23, 42, 0.8); /* Fond un peu plus sombre */
+            backdrop-filter: blur(8px);
+            pointer-events: auto;
+        }
+
+        .expanded-card {
+            width: 95%; max-width: 800px; max-height: 90vh; /* Prend de la hauteur mais laisse une marge */
+            background: #1e293b; border: 1px solid #334155; border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95) translateY(20px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column; 
+            position: relative;
+            overflow: hidden; /* Pour l'arrondi */
+        }
+
+        #project-overlay.open .expanded-card {
+            transform: scale(1) translateY(0); opacity: 1;
+        }
+
+        /* Scrollbar interne sur tout le contenu */
+        .scroll-container {
+            overflow-y: auto;
+            height: 100%;
+        }
+        .scroll-container::-webkit-scrollbar { width: 6px; }
+        .scroll-container::-webkit-scrollbar-track { background: transparent; }
+        .scroll-container::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .scroll-container::-webkit-scrollbar-thumb:hover { background: #699b71; }
     </style>
 </head>
 <body class="antialiased">
@@ -315,10 +355,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 
-                <!-- Project: Bluexplorer -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/Bluexplorer." target="_blank" class="project-link-overlay"></a>
-                    
+                <div onclick="openProject('bluexplorer')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
                             <i class="fas fa-water text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
@@ -328,85 +365,101 @@
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Bluexplorer</h3>
-                            <span class="text-xs border border-primary text-primary px-2 py-1 rounded">PFE</span>
+                            <a href="https://github.com/MrZouu/Bluexplorer." target="_blank" onclick="event.stopPropagation()" class="text-xs border border-primary text-primary px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors cursor-pointer z-20">
+                                PFE
+                            </a>
                         </div>
                         <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_blue_desc">Prototype de drone sous-marin pour l'exploration. Conception mécanique et électronique.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Embedded</span>
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Python</span>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Embedded</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Python</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2025</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project: SmoothTalk -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/SmoothTalk" target="_blank" class="project-link-overlay"></a>
+                <div onclick="openProject('smoothtalk')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
-                             <i class="fas fa-sign-language text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                                <i class="fas fa-sign-language text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
                         </div>
                         <img src="./assets/projects/SmoothTalkCover.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">SmoothTalk</h3>
-                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                            <a href="https://github.com/MrZouu/SmoothTalk" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
                         </div>
                         <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_smooth_desc">Traduction de la langue des signes en temps réel via webcam et Deep Learning.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">PyTorch</span>
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">OpenCV</span>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">PyTorch</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">OpenCV</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2024</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project: Robot Arm -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/LeRobot-HandControl" target="_blank" class="project-link-overlay"></a>
+                <div onclick="openProject('robotarm')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
-                             <i class="fas fa-sign-language text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                                <i class="fas fa-robot text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
                         </div>
                         <img src="./assets/projects/hand_top.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Robot Arm Control</h3>
-                            <span class="text-xs border border-primary text-primary px-2 py-1 rounded">Hackathon</span>
+                            <a href="https://github.com/MrZouu/LeRobot-HandControl" target="_blank" onclick="event.stopPropagation()" class="text-xs border border-primary text-primary px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors cursor-pointer z-20">
+                                Hackathon
+                            </a>
                         </div>
                         <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_robot_desc">Interface gestuelle pour bras robotisé. Hackathon Hugging Face 2025.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">AI</span>
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Robotics</span>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">AI</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Robotics</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2025</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project: Radio Transmitter -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/Radio-Transmitter" target="_blank" class="project-link-overlay"></a>
+                <div onclick="openProject('radio')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
-                             <i class="fas fa-sign-language text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                                <i class="fas fa-broadcast-tower text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
                         </div>
                         <img src="./assets/projects/radiotransmitter_illustration.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Radio Transmitter</h3>
-                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                            <a href="https://github.com/MrZouu/Radio-Transmitter" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
                         </div>
                         <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_radio_desc">Télécommande sans fil pour piloter divers projets.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Arduino</span>
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C++</span>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Arduino</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C++</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2024</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project: Battleship -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/Battleship" target="_blank" class="project-link-overlay"></a>
+                <div onclick="openProject('battleship')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
                             <i class="fas fa-ship text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
@@ -415,18 +468,22 @@
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Battleship</h3>
-                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                            <a href="https://github.com/MrZouu/Battleship" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
                         </div>
                         <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_battle_desc">Version console simplifiée de la bataille navale.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C</span>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2023</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project: Game of Life -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/Game-of-Life" target="_blank" class="project-link-overlay"></a>
+                <div onclick="openProject('life')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
                             <i class="fas fa-dna text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
@@ -435,18 +492,22 @@
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Game of Life</h3>
-                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                            <a href="https://github.com/MrZouu/Game-of-Life" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
                         </div>
-                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_life_desc">Implémentation du Game Of Life de Conway.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C</span>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_life_desc">Implémentation du jeu de la vie de Conway.</p>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2023</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project: Air Traffic -->
-                 <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/Air_traffic_control_simulation" target="_blank" class="project-link-overlay"></a>
+                <div onclick="openProject('airtraffic')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
                             <i class="fas fa-plane text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
@@ -455,60 +516,73 @@
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Air Traffic Control</h3>
-                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                            <a href="https://github.com/MrZouu/Air_traffic_control_simulation" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
                         </div>
                         <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_air_desc">Simulation 2D de contrôle aérien.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C++</span>
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Allegro</span>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C++</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Allegro</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2022</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project: Space Invaders -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/Space_Invaders" target="_blank" class="project-link-overlay"></a>
-                    <div class="h-56 relative overflow-hidden bg-slate-800">
-                       <div class="absolute inset-0 flex items-center justify-center">
-                           <i class="fas fa-space-shuttle text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
-                       </div>
-                   </div>
-                   <div class="p-8 flex-grow flex flex-col">
-                       <div class="flex justify-between items-start mb-4">
-                           <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Space Invaders</h3>
-                           <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
-                       </div>
-                       <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_space_desc">Jeu classique Space Invaders utilisant Pygame.</p>
-                       <div class="flex flex-wrap gap-2 mt-auto">
-                           <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Python</span>
-                           <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Pygame</span>
-                       </div>
-                   </div>
-               </div>
-
-                <!-- Project: Portfolio -->
-                <div class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative">
-                    <a href="https://github.com/MrZouu/Portfolio" target="_blank" class="project-link-overlay"></a>
+                <div onclick="openProject('space')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
                     <div class="h-56 relative overflow-hidden bg-slate-800">
                         <div class="absolute inset-0 flex items-center justify-center">
-                             <i class="fas fa-sign-language text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                            <i class="fas fa-space-shuttle text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Space Invaders</h3>
+                            <a href="https://github.com/MrZouu/Space_Invaders" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_space_desc">Jeu classique Space Invaders utilisant Pygame.</p>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Python</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Pygame</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2022</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="openProject('portfolio')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-laptop-code text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
                         </div>
                         <img src="./assets/homepage.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
                     </div>
                     <div class="p-8 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Portfolio</h3>
-                            <i class="fab fa-github text-xl text-gray-400 hover:text-white transition-colors relative z-30"></i>
+                            <a href="https://github.com/MrZouu/Portfolio" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
                         </div>
                         <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_web_desc">Ce site web.</p>
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">HTML</span>
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">CSS</span>
-                            <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">JS</span>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">HTML</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">CSS</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">JS</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2025</span>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -1124,6 +1198,409 @@
             // Style active button
             evt.currentTarget.classList.add("active");
         }
+
+        /* --- PROJECT DETAILS DATA --- */
+        const projectsData = {
+            bluexplorer: {
+                title: "Bluexplorer",
+                date: "2025",
+                img: "./assets/projects/bluexplorer_cover.png", 
+                github: "https://github.com/MrZouu/Bluexplorer.",
+                live: null,
+                tags: ["Embedded", "Python", "Raspberry Pi", "KiCad", "Shapr3D", "3D Printing"],
+                descFr: `**Prototype de Drone Sous-Marin** de surveillance et d'expérimentation. Ce projet porte sur la conception et le développement du prototype, à faible coût destiné à la recherche et à la surveillance.
+
+                <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue.png" 
+                    alt="Bluexplorer Global" 
+                    class="block mx-auto w-1/2 rounded-lg mb-0">
+
+                <span class="text-xs leading-tight block text-gray-500 text-center -mt-20 mb-6">
+                    Ce projet est le résultat d’un travail collectif réalisé dans le cadre de mon projet de fin d’études, avec une échéance imposée. Il a donc été laissé en l’état au moment de sa remise. Une nouvelle version, améliorée et optimisée, est actuellement en cours de développement, cette fois à titre personnel et en dehors du cadre scolaire.
+                </span>
+
+                **Conception Mécanique**
+                L'ensemble de la conception 3D a été réalisé à l'aide de Shapr3D. 
+                L'accent a été mis sur la compacité de la structure, afin de garantir un assemblage sûr de tous les composants. La structure interne a été conçue pour pouvoir être facilement retirée d'un seul bloc du tube principal, en retirant simplement le joint d'étanchéité.
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-4 mb-2 w-full">
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">CAO Globale</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue_cao.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="CAO">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">CAO Top</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue_cao_top.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="CAO Top">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">CAO Face</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue_cao_face.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="CAO Face">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2 mb-4 w-full">
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Interne Iso</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/internal_structure.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Interne">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Interne Gauche</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/internal_structure_left.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Interne Left">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Interne Face</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/internal_structure_face.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Interne Face">
+                    </div>
+                </div>
+
+                **Schematic**
+                Le circuit imprimé est conçu pour être monté en "shield" sur le Raspberry Pi. Il offre un moyen plus structuré et plus fiable de connecter les principaux composants, ce qui facilite l'assemblage, bien qu'il reste facultatif.
+
+                <div class="grid grid-cols-2 gap-2 mt-4 mb-2 w-full">
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-64 overflow-hidden">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">PCB Iso</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/pcb.png" alt="PCB" class="w-full h-full object-contain hover:scale-125 transition-transform duration-500">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-64 overflow-hidden">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">PCB Face</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/pcb_face.png" alt="PCB Face" class="w-full h-full object-contain rotate-90 hover:scale-125 transition-transform duration-500">
+                    </div>
+                </div>
+
+                **Électronique & Software**
+                Le cœur du système est une **Raspberry Pi 4B**. Le code **Python** gère le pilotage et le flux vidéo en temps réel via Ethernet.
+
+                    **État du Projet**
+                        Le prototype est assemblé et l'électronique fonctionne : Allumage par interrupteur magnétique, retour vidéo fluide et contrôle des moteurs opérationnels.
+                        Cependant, l'étanchéité n'étant pas optimale, les tests sous l'eau ont été écourtés pour préserver le matériel.
+
+                    <p class="text-sm text-primary font-medium mt-0 leading-snug">
+                        <i class="fas fa-arrow-right mr-2"></i> <strong>Roadmap :</strong> Une nouvelle version du projet est en cours (projet personnel), intégrant simulation poussée et de nouveaux composants de navigation.
+                    </p>
+
+                
+                <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/raspberry_vnc_viewer.png" alt="Interface Software" class="block w-full rounded-lg border border-gray-700 shadow-sm object-cover mb-4">
+                
+                <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/bluexplorer_setup.jpg" alt="Bluexplorer Setup" class="block w-full rounded-lg border border-gray-700 shadow-sm object-cover">
+                `,
+
+                descEn: `**Underwater Drone Prototype** for surveillance and experimentation. This project focuses on the design and development of a low-cost prototype intended for research and monitoring.
+
+                <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue.png" 
+                    alt="Bluexplorer Global" 
+                    class="block mx-auto w-1/2 rounded-lg mb-0">
+
+                <span class="text-xs leading-tight block text-gray-500 text-center -mt-20 mb-6">
+                    This project is the result of a collective work carried out as part of my final year project, with a strict deadline. It was therefore left as is upon delivery. A new, improved, and optimized version is currently under development, this time as a personal project outside the academic framework.
+                </span>
+
+                **Mechanical Design**
+                The entire 3D design was created using Shapr3D.
+                Emphasis was placed on the compactness of the structure to ensure a secure assembly of all components. The internal structure was designed to be easily removed as a single unit from the main tube by simply removing the seal.
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-4 mb-2 w-full">
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Global CAD</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue_cao.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="CAD">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Top CAD</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue_cao_top.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Top CAD">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Face CAD</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/blue_cao_face.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Face CAD">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2 mb-4 w-full">
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Internal Iso</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/internal_structure.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Internal">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Internal Left</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/internal_structure_left.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Internal Left">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-full">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">Internal Face</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/internal_structure_face.png" class="w-full h-auto max-h-32 object-contain rounded-sm" alt="Internal Face">
+                    </div>
+                </div>
+
+                **Schematic**
+                The PCB is designed to be mounted as a "shield" on the Raspberry Pi. It offers a more structured and reliable way to connect the main components, facilitating assembly, although it remains optional.
+
+                <div class="grid grid-cols-2 gap-2 mt-4 mb-2 w-full">
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-64 overflow-hidden">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">PCB Iso</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/pcb.png" alt="PCB" class="w-full h-full object-contain hover:scale-125 transition-transform duration-500">
+                    </div>
+                    <div class="flex flex-col items-center justify-center border border-gray-700 bg-slate-900/50 rounded p-1 h-64 overflow-hidden">
+                        <strong class="text-gray-400 text-[10px] uppercase mb-1">PCB Face</strong>
+                        <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/pcb_face.png" alt="PCB Face" class="w-full h-full object-contain rotate-90 hover:scale-125 transition-transform duration-500">
+                    </div>
+                </div>
+
+                **Electronics & Software**
+                The heart of the system is a **Raspberry Pi 4B**. The **Python** code handles control and real-time video streaming via Ethernet.
+
+                    **Project Status**
+                        The prototype is assembled and electronics are functional: Magnetic switch power-up, smooth video feed, and operational motor control.
+                        However, as waterproofing was not optimal, underwater tests were shortened to preserve the hardware.
+
+                    <p class="text-sm text-primary font-medium mt-0 leading-snug">
+                        <i class="fas fa-arrow-right mr-2"></i> <strong>Roadmap:</strong> A new version is underway (personal project), integrating advanced simulation and new navigation components.
+                    </p>
+
+                <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/raspberry_vnc_viewer.png" alt="Software Interface" class="block w-full rounded-lg border border-gray-700 shadow-sm object-cover mb-4">
+                
+                <img src="https://raw.githubusercontent.com/MrZouu/Bluexplorer./main/bluexplorer/bluexplorer_setup.jpg" alt="Bluexplorer Setup" class="block w-full rounded-lg border border-gray-700 shadow-sm object-cover">
+                `
+            },
+            smoothtalk: {
+                title: "SmoothTalk",
+                date: "2024",
+                img: "./assets/projects/SmoothTalkCover.png",
+                github: "https://github.com/MrZouu/SmoothTalk",
+                live: null,
+                tags: ["PyTorch", "OpenCV", "Deep Learning"],
+                descFr: "SmoothTalk est une application innovante visant à briser la barrière de la langue des signes. \n\nEn utilisant une simple webcam et des algorithmes de Deep Learning (Réseaux de neurones convolutifs), le système détecte les mains de l'utilisateur et traduit les signes de l'alphabet en texte en temps réel.\n\n**Points clés :**\n• Collecte d'un dataset custom.\n• Entraînement du modèle sous PyTorch.\n• Interface temps-réel avec OpenCV.",
+                descEn: "SmoothTalk is an innovative application aiming to break the sign language barrier.\n\nUsing a simple webcam and Deep Learning algorithms (Convolutional Neural Networks), the system detects the user's hands and translates alphabet signs into text in real-time.\n\n**Key points:**\n• Custom dataset collection.\n• Model training using PyTorch.\n• Real-time interface with OpenCV."
+            },
+            robotarm: {
+                title: "Robot Arm Control",
+                date: "2025",
+                img: "./assets/projects/hand_top.png",
+                github: "https://github.com/MrZouu/LeRobot-HandControl",
+                live: null,
+                tags: ["AI", "Robotics", "Hugging Face"],
+                descFr: "Projet développé lors d'un Hackathon Hugging Face 2025. L'idée est de contrôler un bras robotisé de manière intuitive grâce à la reconnaissance gestuelle.\n\nUne caméra capture les mouvements de la main de l'opérateur, une IA interprète la pose, et envoie les commandes aux servos du bras robotique pour imiter le mouvement avec précision.",
+                descEn: "Project developed during a Hugging Face Hackathon 2025. The idea is to control a robotic arm intuitively using gesture recognition.\n\nA camera captures the operator's hand movements, an AI interprets the pose, and sends commands to the robotic arm's servos to mimic the movement with precision."
+            },
+            radio: {
+                title: "Radio Transmitter",
+                date: "2024",
+                img: "./assets/projects/radiotransmitter_illustration.png",
+                github: "https://github.com/MrZouu/Radio-Transmitter",
+                live: null,
+                tags: ["Arduino", "C++", "RF Communication"],
+                descFr: "Conception et fabrication d'une télécommande radio universelle.\n\nCe projet matériel inclut le design du PCB, le soudage des composants, et la programmation du microcontrôleur Arduino pour communiquer via module radio NRF24L01. Elle me sert aujourd'hui à piloter mes autres robots et drones.",
+                descEn: "Design and manufacturing of a universal radio remote control.\n\nThis hardware project includes PCB design, component soldering, and programming the Arduino microcontroller to communicate via NRF24L01 radio module. I use it today to pilot my other robots and drones."
+            },
+            battleship: {
+                title: "Battleship",
+                date: "2023",
+                img: null,
+                github: "https://github.com/MrZouu/Battleship",
+                live: null,
+                tags: ["C", "Algorithm", "Console Game"],
+                descFr: "Une implémentation classique du jeu de Bataille Navale en langage C.\n\nLe projet se concentre sur l'optimisation des algorithmes de jeu, la gestion de la mémoire et une interface en ligne de commande (CLI) propre et jouable.",
+                descEn: "A classic implementation of the Battleship game in C language.\n\nThe project focuses on game algorithm optimization, memory management, and a clean, playable command-line interface (CLI)."
+            },
+            life: {
+                title: "Game of Life",
+                date: "2023",
+                img: null,
+                github: "https://github.com/MrZouu/Game-of-Life",
+                live: null,
+                tags: ["C", "Simulation", "Cellular Automaton"],
+                descFr: "Reproduction du célèbre automate cellulaire de John Conway : Le Jeu de la Vie.\n\nCodé en C, ce programme simule l'évolution de cellules selon des règles simples, créant des motifs complexes et imprévisibles.",
+                descEn: "Reproduction of John Conway's famous cellular automaton: The Game of Life.\n\nCoded in C, this program simulates the evolution of cells according to simple rules, creating complex and unpredictable patterns."
+            },
+            airtraffic: {
+                title: "Air Traffic Control",
+                date: "2022",
+                img: null,
+                github: "https://github.com/MrZouu/Air_traffic_control_simulation",
+                live: null,
+                tags: ["C++", "Allegro", "Simulation"],
+                descFr: "Simulation graphique de contrôle aérien.\n\nLe but est de gérer les trajectoires de multiples avions pour éviter les collisions et les faire atterrir en sécurité. Utilisation de la librairie graphique Allegro et programmation orientée objet en C++.",
+                descEn: "Graphical air traffic control simulation.\n\nThe goal is to manage the trajectories of multiple planes to avoid collisions and land them safely. Uses the Allegro graphics library and Object-Oriented Programming in C++."
+            },
+            space: {
+                title: "Space Invaders",
+                date: "2022",
+                img: null,
+                github: "https://github.com/MrZouu/Space_Invaders",
+                live: null,
+                tags: ["Python", "Pygame", "Retro Gaming"],
+                descFr: "Re-création du jeu d'arcade culte Space Invaders.\n\nDéveloppé en Python avec la bibliothèque Pygame, ce projet reprend les mécaniques originales : vagues d'ennemis, scores, et difficulté progressive.",
+                descEn: "Re-creation of the cult arcade game Space Invaders.\n\nDeveloped in Python with the Pygame library, this project features original mechanics: enemy waves, scores, and progressive difficulty."
+            },
+            portfolio: {
+                title: "Portfolio Website",
+                date: "2025",
+                img: "./assets/homepage.png",
+                github: "https://github.com/MrZouu/Portfolio",
+                live: "https://lorenzomarrocchi.com/",
+                tags: ["HTML", "CSS", "Tailwind", "JavaScript"],
+                descFr: "Le site sur lequel vous naviguez actuellement !\n\nConçu pour être rapide, responsive et multilingue sans utiliser de frameworks lourds (React/Vue), juste du HTML/JS pur et Tailwind CSS pour le style. Mode sombre natif et animations CSS.",
+                descEn: "The website you are currently browsing!\n\nDesigned to be fast, responsive, and multilingual without using heavy frameworks (React/Vue), just pure HTML/JS and Tailwind CSS for styling. Native dark mode and CSS animations."
+            }
+        };
+
+        let activeProjectID = null;
+
+        function openProject(id) {
+            const data = projectsData[id];
+            if (!data) return;
+
+            activeProjectID = id;
+
+            // 1. Textes
+            document.getElementById('exp-title').textContent = data.title;
+            document.getElementById('exp-date').textContent = data.date;
+            
+            // 2. Gestion "Intelligente" de l'image / Bandeau
+            const headerEl = document.getElementById('exp-header');
+            const imgEl = document.getElementById('exp-img');
+
+            if (data.img) {
+                imgEl.src = data.img;
+                imgEl.style.display = 'block';
+                headerEl.classList.add('aspect-video');
+                headerEl.classList.remove('h-48', 'bg-gradient-to-r', 'from-slate-700', 'to-slate-900');
+            } else {
+                imgEl.style.display = 'none';
+                imgEl.src = '';
+                headerEl.classList.remove('aspect-video');
+                headerEl.classList.add('h-48', 'bg-gradient-to-r', 'from-slate-700', 'to-slate-900');
+            }
+
+            // 3. Gestion Liens
+            const githubBtn = document.getElementById('exp-link-github');
+            const liveBtn = document.getElementById('exp-link-live');
+            const titleLink = document.getElementById('exp-title-link');
+
+            // Github
+            if (data.github) {
+                githubBtn.href = data.github;
+                githubBtn.style.display = 'block';
+            } else {
+                githubBtn.style.display = 'none';
+            }
+
+            // Live Link
+            const mainLink = data.live ? data.live : data.github;
+            if (data.live) {
+                liveBtn.href = data.live;
+                liveBtn.style.display = 'block';
+            } else {
+                liveBtn.style.display = 'none';
+            }
+
+            // Titre cliquable
+            titleLink.href = mainLink;
+            if (!mainLink) titleLink.removeAttribute('href');
+
+            // 4. Tags
+            const tagsContainer = document.getElementById('exp-tags');
+            tagsContainer.innerHTML = '';
+            data.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = "px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium";
+                span.textContent = tag;
+                tagsContainer.appendChild(span);
+            });
+
+            // 5. Description
+            updateProjectText();
+
+            // 6. Ouverture
+            document.getElementById('project-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        
+
+        function closeProject(e) {
+            // If e is null, it's a direct close call. If e exists, check if click was on overlay (not card)
+            if (e && e.target.id !== 'project-overlay') return;
+
+            document.getElementById('project-overlay').classList.remove('open');
+            document.body.style.overflow = ''; // Restore scrolling
+            activeProjectID = null;
+        }
+
+        function updateProjectText() {
+            if (!activeProjectID) return;
+            const data = projectsData[activeProjectID];
+            const descEl = document.getElementById('exp-desc');
+            
+            // Simple parsing for **bold**
+            let text = currentLang === 'fr' ? data.descFr : data.descEn;
+            // Basic Markdown parser for bold
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>');
+            
+            descEl.innerHTML = text;
+
+            // Update button text as well
+            const btnOpen = document.querySelector('[data-i18n="btn_open"]');
+            if(btnOpen) btnOpen.textContent = currentLang === 'fr' ? "Ouvrir" : "Open";
+        }
+
+        // Hook into existing toggleLanguage to update modal if open
+        const originalToggleLanguage = toggleLanguage;
+        toggleLanguage = function() {
+            originalToggleLanguage(); // Call original
+            updateProjectText(); // Update modal text if open
+        };
     </script>
+
+        <div id="project-overlay" onclick="closeProject(event)">
+            <div class="expanded-card" onclick="event.stopPropagation()">
+                
+                <button onclick="closeProject(null)" class="absolute top-4 right-4 z-50 h-10 w-10 bg-black/40 hover:bg-red-500 text-white rounded-full flex items-center justify-center transition-all backdrop-blur-md">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="scroll-container">
+                    
+                    <div id="exp-header" class="relative w-full aspect-video bg-slate-800 transition-all duration-300 overflow-hidden">
+                        
+                        <img id="exp-img" src="" class="w-full h-full object-cover block" alt="Project Cover">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-card/90 via-transparent to-transparent"></div>
+
+                        <div class="absolute bottom-4 right-6 flex items-center gap-5 z-40">
+                            <a id="exp-link-live" href="#" target="_blank" class="text-gray-300 hover:text-primary transition-colors hover:scale-110 transform duration-200" title="Voir le site">
+                                <i class="fas fa-globe text-3xl drop-shadow-lg"></i>
+                            </a>
+                            <a id="exp-link-github" href="#" target="_blank" class="text-gray-300 hover:text-white transition-colors hover:scale-110 transform duration-200" title="Voir le code">
+                                <i class="fab fa-github text-4xl drop-shadow-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="p-8 md:p-10 bg-card min-h-[200px]">
+                
+                        <div class="flex flex-wrap items-start gap-4 mb-6 w-full">
+                            
+                            <a id="exp-title-link" href="#" target="_blank" class="block group flex-1 min-w-0 pt-1">
+                                <h2 id="exp-title" class="text-3xl md:text-4xl font-bold text-white group-hover:text-primary transition-colors leading-tight break-words">
+                                    Titre du Projet
+                                    <i class="fas fa-external-link-alt text-sm opacity-0 group-hover:opacity-100 transition-opacity text-primary translate-y-1 align-top ml-2"></i>
+                                </h2>
+                            </a>
+
+                            <div class="shrink-0 ml-auto">
+                                <span id="exp-date" class="block px-4 py-2 rounded-lg border-2 border-gray-700 text-gray-400 font-bold font-mono text-xl transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-[0_0_15px_rgba(105,155,113,0.3)] select-none bg-dark/30">
+                                    202X
+                                </span>
+                            </div>
+                        </div>
+
+                        <div id="exp-tags" class="flex flex-wrap gap-2 mb-8">
+                            </div>
+                        
+                        <div class="prose prose-invert max-w-none">
+                            <p id="exp-desc" class="text-gray-300 text-lg leading-relaxed whitespace-pre-line">
+                                Description du Projet
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
 </body>
 </html>
