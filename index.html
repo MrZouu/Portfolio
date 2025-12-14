@@ -425,7 +425,7 @@
                         
                         <div class="flex justify-between items-center mt-auto w-full">
                             <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">AI</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Computer Vision</span>
                                 <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">Robotics</span>
                             </div>
                             <span class="text-xs font-bold text-gray-500 font-mono ml-2">2025</span>
@@ -455,6 +455,33 @@
                                 <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">C++</span>
                             </div>
                             <span class="text-xs font-bold text-gray-500 font-mono ml-2">2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="openProject('portfolio')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
+                    <div class="h-56 relative overflow-hidden bg-slate-800">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-laptop-code text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
+                        </div>
+                        <img src="./assets/homepage.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Portfolio</h3>
+                            <a href="https://github.com/MrZouu/Portfolio" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_web_desc">Ce site web.</p>
+                        
+                        <div class="flex justify-between items-center mt-auto w-full">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">HTML</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">CSS</span>
+                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">JS</span>
+                            </div>
+                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2025</span>
                         </div>
                     </div>
                 </div>
@@ -557,32 +584,7 @@
                     </div>
                 </div>
 
-                <div onclick="openProject('portfolio')" class="project-card bg-card rounded-2xl overflow-hidden border border-gray-700 group flex flex-col relative h-[450px]">
-                    <div class="h-56 relative overflow-hidden bg-slate-800">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-laptop-code text-5xl text-gray-600 group-hover:text-primary transition-colors"></i>
-                        </div>
-                        <img src="./assets/homepage.png" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'">
-                    </div>
-                    <div class="p-8 flex-grow flex flex-col">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Portfolio</h3>
-                            <a href="https://github.com/MrZouu/Portfolio" target="_blank" onclick="event.stopPropagation()" class="text-gray-400 hover:text-white transition-colors relative z-20 p-1">
-                                <i class="fab fa-github text-xl"></i>
-                            </a>
-                        </div>
-                        <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed" data-i18n="proj_web_desc">Ce site web.</p>
-                        
-                        <div class="flex justify-between items-center mt-auto w-full">
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">HTML</span>
-                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">CSS</span>
-                                <span class="px-3 py-1 bg-dark rounded text-xs text-primary font-mono border border-gray-700">JS</span>
-                            </div>
-                            <span class="text-xs font-bold text-gray-500 font-mono ml-2">2025</span>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </section>
@@ -1362,21 +1364,75 @@
                 date: "2024",
                 img: "./assets/projects/SmoothTalkCover.png",
                 github: "https://github.com/MrZouu/SmoothTalk",
-                live: null,
-                tags: ["PyTorch", "OpenCV", "Deep Learning"],
-                descFr: "SmoothTalk est une application innovante visant à briser la barrière de la langue des signes. \n\nEn utilisant une simple webcam et des algorithmes de Deep Learning (Réseaux de neurones convolutifs), le système détecte les mains de l'utilisateur et traduit les signes de l'alphabet en texte en temps réel.\n\n**Points clés :**\n• Collecte d'un dataset custom.\n• Entraînement du modèle sous PyTorch.\n• Interface temps-réel avec OpenCV.",
-                descEn: "SmoothTalk is an innovative application aiming to break the sign language barrier.\n\nUsing a simple webcam and Deep Learning algorithms (Convolutional Neural Networks), the system detects the user's hands and translates alphabet signs into text in real-time.\n\n**Key points:**\n• Custom dataset collection.\n• Model training using PyTorch.\n• Real-time interface with OpenCV."
-            },
+                live: "https://www.sia-partners.com/fr",
+                tags: ["PyTorch", "Cuda", "OpenCV", "Deep Learning","Python"],
+                descFr: `
+                Ce projet vise à développer un système de reconnaissance de la langue des signes, en permettant de passer d'un signal vidéo à un mot correspondant. \n**En partenariat avec Sia Partners**\n
+                <img src="https://raw.githubusercontent.com/MrZouu/SmoothTalk/main/SmoothTalk/recognition_streamlit_2.png" 
+                    alt="Smoothtalk Global" 
+                    class="block mx-auto rounded-lg mb-0">
+
+                <span class="text-xs leading-tight block text-gray-500 text-center -mt-10 mb-6">
+                    Ce projet est le résultat d’un travail collectif réalisé dans le cadre scolaire, avec une échéance imposée. Il a donc été laissé en l’état au moment de sa remise. 
+                </span>
+                En utilisant une simple webcam et des algorithmes de Deep Learning (Réseaux de neurones convolutifs), le système détecte les mains de l'utilisateur et traduit les signes de l'alphabet en texte en temps réel.\n\n**Points clés :**\n• Collecte d'un dataset custom.\n• Entraînement du modèle sous PyTorch.\n• Interface temps-réel avec OpenCV.
+
+                **Workflow Technique :**
+                Le dataset a été constitué de **150 000 images** grâce à des scripts Python de Data Augmentation (flou, contraste, rotation). 
+                Le modèle a ensuite été entraîné sur GPU (via Google Colab et **CUDA**) pour maximiser la vitesse de traitement. L'application finale est déployée sur **Streamlit**, offrant une interface web fluide pour tester la reconnaissance via webcam.
+                `,
+            
+            descEn: `
+                This project aims to develop a sign language recognition system, translating a video signal into a corresponding word. \n**In partnership with Sia Partners**\n
+                <img src="https://raw.githubusercontent.com/MrZouu/SmoothTalk/main/SmoothTalk/recognition_streamlit_2.png" 
+                    alt="Smoothtalk Global" 
+                    class="block mx-auto rounded-lg mb-0">
+
+                <span class="text-xs leading-tight block text-gray-500 text-center -mt-10 mb-6">
+                    This project is the result of a collective work carried out within a school framework, with an imposed deadline. It was therefore left as is at the time of submission.
+                </span>
+                Using a simple webcam and Deep Learning algorithms (Convolutional Neural Networks), the system detects the user's hands and translates alphabet signs into text in real-time.\n\n**Key Points:**\n• Custom dataset collection.\n• Model training with PyTorch.\n• Real-time interface with OpenCV.
+
+                **Technical Workflow:**
+                The dataset was built with **150,000 images** using custom Python Data Augmentation scripts (blur, contrast, flip). 
+                The model was then trained on GPU (via Google Colab and **CUDA**) to maximize processing speed. The final application is deployed on **Streamlit**, providing a smooth web interface to test recognition via webcam.
+                `},
             robotarm: {
                 title: "Robot Arm Control",
                 date: "2025",
                 img: "./assets/projects/hand_top.png",
                 github: "https://github.com/MrZouu/LeRobot-HandControl",
-                live: null,
-                tags: ["AI", "Robotics", "Hugging Face"],
-                descFr: "Projet développé lors d'un Hackathon Hugging Face 2025. L'idée est de contrôler un bras robotisé de manière intuitive grâce à la reconnaissance gestuelle.\n\nUne caméra capture les mouvements de la main de l'opérateur, une IA interprète la pose, et envoie les commandes aux servos du bras robotique pour imiter le mouvement avec précision.",
-                descEn: "Project developed during a Hugging Face Hackathon 2025. The idea is to control a robotic arm intuitively using gesture recognition.\n\nA camera captures the operator's hand movements, an AI interprets the pose, and sends commands to the robotic arm's servos to mimic the movement with precision."
-            },
+                live: "https://huggingface.co/lerobot",
+                tags: ["Computer Vision", "Robotics", "Python", "Hugging Face", "Hackathon"],
+                descFr: `Projet développé lors du <strong>Hackathon Hugging Face 2025</strong>. L'idée est de contrôler un bras robotisé de manière intuitive grâce à la reconnaissance gestuelle.
+                **En partenariat avec le Artilect FabLab Toulouse**.
+                <img src="https://raw.githubusercontent.com/MrZouu/LeRobot-HandControl/main/assets/Hand_Control_Video.gif" 
+                    alt="LeRobot Hand Control Demo" 
+                    class="block mx-auto w-full rounded-lg mt-4 mb-0 shadow-lg border border-gray-700">
+                Une caméra capture les mouvements de la main de l'opérateur, une IA interprète la pose, et envoie les commandes aux servos du bras robotique pour imiter le mouvement avec précision.
+                
+                **Données & Calibration**
+                Le système extrait en temps réel le **Pitch, Roll, Yaw**, la position **X, Y, Z** ainsi que l'état d'ouverture de la main. Une grille de calibration est utilisée pour calibrer la caméra et obtenir des distances réelles précises.
+
+                **État du Projet**
+                La reconnaissance gestuelle est fonctionnelle et très performante pour une solution monocaméra. 
+                Cependant, l'intégration finale avec les bras robots spécifiques de Hugging Face n'a pas pu être aboutie dans le temps imparti.
+                `,
+
+                descEn: `Project developed during the <strong>Hugging Face Hackathon 2025</strong>. The concept is to control a robotic arm intuitively using gesture recognition.
+                **In partnership with Artilect FabLab Toulouse**.
+                <img src="https://raw.githubusercontent.com/MrZouu/LeRobot-HandControl/main/assets/Hand_Control_Video.gif" 
+                    alt="LeRobot Hand Control Demo" 
+                    class="block mx-auto w-full rounded-lg mt-4 mb-0 shadow-lg border border-gray-700">
+                A camera captures the operator's hand movements, an AI interprets the pose, and sends commands to the robotic arm's servos to mimic the movement with precision.
+                
+                **Data & Calibration**
+                The system extracts in real-time the **Pitch, Roll, Yaw**, the **X, Y, Z** position as well as the hand's open/close state. A calibration grid is used to calibrate the camera and obtain accurate real-world distances.
+                
+                **Project Status**
+                Gesture recognition is functional and highly effective for a single-camera solution.
+                However, the final integration with Hugging Face's specific robot arms could not be completed within the allotted time.
+                    `},
             radio: {
                 title: "Radio Transmitter",
                 date: "2024",
