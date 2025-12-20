@@ -208,6 +208,66 @@
         .scroll-container::-webkit-scrollbar-track { background: transparent; }
         .scroll-container::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .scroll-container::-webkit-scrollbar-thumb:hover { background: #699b71; }
+
+
+        /* --- SKILLS TOOLTIPS --- */
+        .skill-card {
+            position: relative;
+        }
+        
+        /* La bulle (cachée par défaut) */
+        .skill-tooltip {
+            position: absolute;
+            bottom: 110%; /* Juste au-dessus */
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            width: 200px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #334155;
+            padding: 12px;
+            border-radius: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+
+        /* La flèche du bas de la bulle */
+        .skill-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #334155 transparent transparent transparent;
+        }
+
+        /* Affichage au survol */
+        .skill-card:hover .skill-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Barre de niveau */
+        .level-bar {
+            height: 4px;
+            background: #1e293b;
+            border-radius: 2px;
+            margin-top: 6px;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+        .level-fill {
+            height: 100%;
+            background: #699b71;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -753,212 +813,559 @@
 
             <!-- Tab Navigation -->
             <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
-                <button onclick="openTab(event, 'embedded')" class="tab-btn active px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_embedded">
-                    <i class="fas fa-microchip"></i> <span class="hidden md:inline">Systèmes</span> Embarqués
+                <button onclick="openTab(event, 'hardware')" class="tab-btn active px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2">
+                    <i class="fas fa-bolt"></i> <span data-i18n="tab_hardware">Hardware</span>
                 </button>
-                <button onclick="openTab(event, 'software')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_software">
-                    <i class="fas fa-code"></i> Software & IA
+                <button onclick="openTab(event, 'embedded')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2">
+                    <i class="fas fa-microchip"></i> <span data-i18n="tab_embedded">Systèmes Embarqués</span>
                 </button>
-                <button onclick="openTab(event, 'tools')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_tools">
-                    <i class="fas fa-tools"></i> Outils
+                <button onclick="openTab(event, 'software')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2">
+                    <i class="fas fa-code"></i> <span data-i18n="tab_software">Software & AI</span>
                 </button>
-                <button onclick="openTab(event, 'languages')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2" data-i18n="tab_languages">
-                    <i class="fas fa-language"></i> Langues
+                <button onclick="openTab(event, 'tools')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2">
+                    <i class="fas fa-tools"></i> <span data-i18n="tab_tools">Outils</span>
+                </button>
+                <button onclick="openTab(event, 'languages')" class="tab-btn px-4 py-2 md:px-6 md:py-3 text-sm md:text-base rounded-full border border-gray-700 bg-card text-gray-300 hover:border-primary hover:text-white transition-all font-medium flex items-center gap-2">
+                    <i class="fas fa-language"></i> <span data-i18n="tab_languages">Langues</span>
                 </button>
             </div>
 
             <!-- Tab Contents Container -->
-            <div class="bg-card rounded-3xl p-6 md:p-12 border border-gray-800 shadow-2xl">
+            <div class="bg-card rounded-3xl p-6 md:p-12 border border-gray-800 shadow-2xl min-h-[400px]">
                 
-                <!-- CONTENT: Embedded -->
-                <div id="embedded" class="tab-content active grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 text-center">
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/labview-original.png" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="LabVIEW" onerror="this.src='./assets/skills/labview.png'">
+                <!-- 1. HARDWARE (Élec, Simu, FPGA) -->
+                <div id="hardware" class="tab-content active grid-cols-3 md:grid-cols-5 gap-4 md:gap-8 text-center">
+                    
+                    <!-- KiCad -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/kicad.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="KiCad">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">KiCad</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_pcb">Conception PCB</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 70%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_kicad">Schématique, Routage, Empreintes, Fabrication.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">LabVIEW</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/C.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="C" onerror="this.src='./assets/skills/C.svg'">
+
+                    <!-- Raspberry Pi -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/raspberry-pi.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Raspberry Pi">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Raspberry Pi</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_sbc">SBC</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 90%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_rpi">GPIO, Serveur embarqué, Caméra, Python/C++.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">C/C++</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/arduino.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Arduino" onerror="this.src='./assets/skills/arduino.svg'">
+
+                    <!-- FPGA -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/fpga.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="FPGA" onerror="this.parentElement.innerHTML='<i class=\'fas fa-microchip text-4xl mb-3 text-gray-400\'></i>'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">FPGA</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_arch">Architecture</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 45%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_fpga">Logique programmable, VHDL, optimisation matérielle.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Arduino</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/raspberry-pi.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Raspberry" onerror="this.src='./assets/skills/raspberry-pi.svg'">
+
+                    <!-- Vivado -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/vivado.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Vivado" onerror="this.parentElement.innerHTML='<span class=\'text-primary font-bold text-xl block mb-3\'>Xilinx</span>'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Vivado</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_xilinx">Outil Xilinx</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 30%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_vivado">Synthèse, Implémentation et Bitstream pour cartes Zynq-7000.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Raspberry Pi</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/fpga.png" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="FPGA">
-                        <span class="text-xs md:text-base font-medium text-gray-200">FPGA</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/assembly.png" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="Assembly">
-                        <span class="text-xs md:text-base font-medium text-gray-200">Assembly</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/linux.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Linux" onerror="this.src='./assets/skills/linux.svg'">
+
+                    <!-- Quartus-->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/quartus-logo.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Quartus" onerror="this.parentElement.innerHTML='<span class=\'text-primary font-bold text-xl block mb-3\'>Quartus</span>'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Quartus</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_altera">Outil Intel/Altera</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 30%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_quartus">Environnement de développement pour FPGA Altera.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Linux / Unix</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/kicad.png" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="KiCad">
-                        <span class="text-xs md:text-base font-medium text-gray-200">KiCad</span>
+
+                    <!-- Proteus -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Proteus_Design_Logo.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Proteus">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Proteus</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_sim">Simulation Mixte</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 60%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_proteus">Schémas électroniques et simulation microcontrôleurs.</p>
+                        </div>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/vivado.svg" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="Vivado">
-                        <span class="text-xs md:text-base font-medium text-gray-200">Vivado</span>
+
+                    <!-- PSpice -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <div class="h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-yellow-500">
+                            <i class="fas fa-wave-square text-2xl"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-200">PSpice</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_analog">Analogique</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 50%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_pspice">Simulation de circuits, analyse fréquentielle.</p>
+                        </div>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/Sql.svg" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="SQL">
-                        <span class="text-xs md:text-base font-medium text-gray-200">SQL</span>
+
+                    <!-- Systèmes Bouclés -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <div class="h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-purple-400">
+                            <i class="fas fa-sync text-2xl"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-200" data-i18n="skill_sys_boucles">Systèmes Bouclés</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_auto">Automatique</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 60%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_auto">PID, Stabilité, Nyquist.</p>
+                        </div>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/ada.svg" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="Ada">
-                        <span class="text-xs md:text-base font-medium text-gray-200">Ada</span>
+
+                    <!-- CEM -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <div class="h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-orange-500">
+                            <i class="fas fa-magnet text-2xl"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-200" data-i18n="skill_cem">CEM</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_norm">Normes</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 50%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_cem">Compatibilité Électromagnétique, blindage.</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- CONTENT: Software -->
-                <div id="software" class="tab-content grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 text-center">
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/python.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Python" onerror="this.src='./assets/skills/python.svg'">
+                <!-- 2. EMBEDDED (Firmware, Réseaux, Microcontrôleurs) -->
+                <div id="embedded" class="tab-content grid-cols-3 md:grid-cols-5 gap-4 md:gap-8 text-center">
+                    
+                    <!-- C/C++ -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/C.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="C">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">C / C++ Emb.</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_lang">Langage</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 85%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_c">Bas niveau, pointeurs, structures, mémoire.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Python</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/pytorch.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Pytorch" onerror="this.src='./assets/skills/pytorch.svg'">
+
+                    <!-- Arduino -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/arduino.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Arduino">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Arduino</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_framework">Framework</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 90%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_arduino">Prototypage rapide, librairies, C++ simplifié.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">PyTorch</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/TensorFlow.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="TensorFlow" onerror="this.src='./assets/skills/TensorFlow.svg'">
+
+                    <!-- Linux Emb / Unix -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/linux.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Linux">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Linux / Unix</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_os">OS & Shell</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 70%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_linux">Ubuntu, Bash, SSH, Command line.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">TensorFlow</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/opencv_logo.png" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="OpenCV" onerror="this.src='./assets/skills/opencv_logo.png'">
+
+                    <!-- ATMega -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/microchip.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="ATmega">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">ATmega</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider">ATmega</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 60%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_atmega">Registres directs, interruptions, ISP, Bootloader.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">OpenCV</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/Html.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="html" onerror="this.src='./assets/skills/Html.svg'">
+
+                    <!-- ESP -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/esp.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="esp">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">ESP</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_conn">Connectivité</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 55%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_esp">Wi-Fi, BLE.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">HTML5</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/css.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="css" onerror="this.src='./assets/skills/css.svg'">
+
+                    <!-- PIC Microchip -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/microchip-pic.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Microchip PIC">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Microchip PIC</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_arch">Architecture</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 40%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_pic">Architecture Harvard, Hardware.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">CSS3</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/qiskit.svg" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="Qiskit">
-                        <span class="text-xs md:text-base font-medium text-gray-200">Qiskit</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <img src="./assets/skills/Keras.svg" class="w-10 h-10 md:w-16 md:h-16 mx-auto mb-2 md:mb-4 group-hover:scale-110 transition-transform object-contain" alt="Keras">
-                        <span class="text-xs md:text-base font-medium text-gray-200">Keras</span>
-                    </div>
-                </div>
-                
-                <!-- CONTENT: Tools -->
-                <div id="tools" class="tab-content grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 text-center">
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/git.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="git" onerror="this.src='./assets/skills/git.svg'">
+
+                    <!-- Assembleur -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/assembly.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="ASM">
+                        <span class="text-xs md:text-sm font-medium text-gray-200" data-i18n="skill_asm">Assembleur</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_low">Bas Niveau</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 20%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_asm">Instructions machine, registres CPU.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Git</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/vscode.png" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="vscode" onerror="this.src='./assets/skills/vscode.png'">
+
+                    <!-- Ada -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/ada.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Ada">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Ada</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_ada">Ada - ECE Paris</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 15%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_ada">Programmation embarquée, gestion de tâches.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">VS Code</span>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/jira.png" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="jira" onerror="this.src='./assets/skills/jira.png'">
+
+                    <!-- RTOS -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <div class="h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-green-400">
+                            <i class="fas fa-clock text-2xl"></i>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Jira</span>
+                        <span class="text-xs md:text-sm font-medium text-gray-200">RTOS</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_realtime">Temps Réel</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 45%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_rtos">Ordonnancement, Tâches, PREEMPT_RT.</p>
+                        </div>
                     </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/Anaconda.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Anaconda" onerror="this.src='./assets/skills/Anaconda.svg'">
+
+                    <!-- Réseaux Indus -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <div class="h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-red-400">
+                            <i class="fas fa-network-wired text-2xl"></i>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Anaconda</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/Illustrator.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Illustrator" onerror="this.src='./assets/skills/Illustrator.svg'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200" data-i18n="skill_bus">Bus Industriels</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_comm">Communication</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 50%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_bus">CAN, I2C, SPI, UART, Modbus.</p>
                         </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Illustrator</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/After_effects.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="After_effects" onerror="this.src='./assets/skills/After_effects.svg'">
-                        </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">After Effects</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/lightroom.png" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Lightroom" onerror="this.src='./assets/skills/lightroom.png'">
-                        </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Lightroom</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/photoshop.png" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="Photoshop" onerror="this.src='./assets/skills/photoshop.png'">
-                        </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Photoshop</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/shapr3D.png" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="shapr3D" onerror="this.src='./assets/skills/shapr3D.png'">
-                        </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Shapr3D</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/cura-icon.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="cura" onerror="this.src='./assets/skills/cura-icon.svg'">
-                        </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Cura Slicer</span>
-                    </div>
-                    <div class="p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
-                        <div class="h-12 w-12 md:h-16 md:w-16 mx-auto mb-2 md:mb-4 flex items-center justify-center">
-                            <img src="./assets/skills/notion.svg" class="max-h-full max-w-full group-hover:scale-110 transition-transform duration-300" alt="notion" onerror="this.src='./assets/skills/notion.svg'">
-                        </div>
-                        <span class="text-xs md:text-base font-medium text-gray-200">Notion</span>
                     </div>
                 </div>
 
-                <!-- CONTENT: Languages (Flex Centered) -->
+                <!-- 3. SOFTWARE (IA, Web, Algo, Data) -->
+                <div id="software" class="tab-content grid-cols-3 md:grid-cols-5 gap-4 md:gap-8 text-center">
+                    
+                    <!-- Python -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/python.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Python">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Python</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_versatile">Polyvalent</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 85%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_python">Data Science, Backend, Scripts.</p>
+                        </div>
+                    </div>
+
+                    <!-- PyTorch -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/pytorch.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="PyTorch">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">PyTorch</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_dl">Deep Learning</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 45%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_pytorch">Réseaux de neurones, GPU, Tenseurs.</p>
+                        </div>
+                    </div>
+
+                    <!-- TensorFlow -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/TensorFlow.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="TensorFlow">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">TensorFlow</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_dl">Deep Learning</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 25%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_pytorch">Réseaux de neurones, GPU, Tenseurs.</p>
+                        </div>
+                    </div>
+
+                    <!-- Keras (Remis) -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Keras.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Keras">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Keras</span>
+                    </div>
+
+                    <!-- OpenCV -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/opencv_logo.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="OpenCV">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">OpenCV</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_vision">Vision</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 55%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_opencv">Traitement d'image temps réel.</p>
+                        </div>
+                    </div>
+
+                    <!-- HTML5 -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Html.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="HTML">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">HTML5</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_web">Développement Web</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 45%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_html">Intégration de contenus pour mon portfolio.</p>
+                        </div>
+                    </div>
+
+                    <!-- CSS3 -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/css.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="CSS">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">CSS3</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_web">Développement Web</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 30%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_css">Design responsive et framework TailwindCSS.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- SQL -->
+                     <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Sql.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="SQL">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">SQL</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_data">Gestion de Données</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 35%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_sql">Bases du langage SQL et requêtes simples.</p>
+                        </div>
+                    </div>
+
+                     <!-- Qiskit -->
+                     <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/qiskit.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Qiskit">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Qiskit</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_quantum">Calcul Quantique</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 35%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_qiskit">Option d'approfondissement : initiation aux algorithmes et circuits quantiques via Qiskit.</p>
+                        </div>
+                    </div>
+                
+
+                <!-- Théorie Graphes -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <div class="h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-pink-500">
+                            <i class="fas fa-project-diagram text-2xl"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium text-gray-200" data-i18n="skill_graph">Graphes</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_algo">Algorithmique</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 70%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_graph">Dijkstra, BFS, DFS, k-connexité.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 4. TOOLS (Matlab, Git, Gestion, Adobe) -->
+                <div id="tools" class="tab-content grid-cols-3 md:grid-cols-5 gap-4 md:gap-8 text-center">
+                    
+                    <!-- LabVIEW -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/labview-original.png" 
+                            class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain group-hover:scale-110 transition-transform duration-300" 
+                            alt="LabVIEW" 
+                            onerror="this.src='./assets/skills/labview.png'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">LabVIEW</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider">Airbus Defence</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 75%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_labview">IHM industrielles, pilotage d'instruments de mesure et bancs de tests.</p>
+                        </div>
+                    </div>
+
+                    <!-- Shapr3D -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/shapr3D.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Shapr3D">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Shapr3D</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_cao">CAO</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 80%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_shapr">Modélisation 3D mécanique.</p>
+                        </div>
+                    </div>
+
+                    <!-- Matlab -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Matlab_Logo.png" 
+                            class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" 
+                            alt="Matlab" 
+                            onerror="this.outerHTML='<div class=\'h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-orange-500 font-bold\'>MAT</div>'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Matlab</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_calc">Calcul</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 55%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_matlab">Calcul matriciel, analyse de données.</p>
+                        </div>
+                    </div>
+
+                    <!-- Simulink-->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Simulink_Logo.png" 
+                            class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" 
+                            alt="Simulink" 
+                            onerror="this.outerHTML='<div class=\'h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-orange-500 font-bold\'>SIM</div>'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Simulink</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_model">Modélisation</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 55%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_simulink">Simulation de systèmes dynamiques.</p>
+                        </div>
+                    </div>
+
+                    <!-- Git -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/git.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Git">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Git / GitHub</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_version">Versionning</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 90%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_git">CI/CD, Pull Requests, Branches.</p>
+                        </div>
+                    </div>
+
+                    <!-- Jira -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/jira.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Jira">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Jira</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_qa">Tests & Validation - Parrot</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 70%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_jira">Suivi de bugs, gestion de tickets et cycles de validation logicielle.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- VS Code -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/vscode.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="VSCode">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">VS Code</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_dev">IDE principal</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 95%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_vscode">Environnement principal pour le développement.</p>
+                        </div>
+                    </div>
+
+                    <!-- Fusion 360 (Ajouté) -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Fusion360_Logo.png" 
+                            class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" 
+                            alt="Fusion 360" 
+                            onerror="this.outerHTML='<div class=\'h-10 w-10 md:w-14 md:h-14 mx-auto mb-3 flex items-center justify-center bg-gray-800 rounded-lg text-orange-500 font-bold\'>F360</div>'">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Fusion 360</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_cao">CAO</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 30%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_fusion">Notions de modélisation 3D.</p>
+                        </div>
+                    </div>
+
+                    <!-- Cura -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/cura-icon.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Cura">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Cura Slicer</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_3d">Fabrication - 3D</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 90%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_cura">Optimisation des supports, paramètres de remplissage et gestion des matériaux.</p>
+                        </div>
+                    </div>
+
+                    <!-- Notion -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/notion.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Notion">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Notion</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_org">Organisation</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 85%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_notion">Gestion de projets personnels, organisation.</p>
+                        </div>
+                    </div>
+
+                     <!-- Anaconda -->
+                     <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Anaconda.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Anaconda">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Anaconda</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_ds">Environnement IA</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 75%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_anaconda">Gestion d'environnements virtuels et développement via Jupyter Notebook.</p>
+                        </div>
+                    </div>
+
+                    <!-- Illustrator -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/Illustrator.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Illustrator">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Illustrator</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_vector">Design Vectoriel</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 35%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_illus">Création de schémas, logos basiques.</p>
+                        </div>
+                    </div>
+
+                    <!-- After Effects -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/After_effects.svg" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="After Effects">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">After Effects</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_motion">Motion Design</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 25%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_ae">Animation simple, montage vidéo basique.</p>
+                        </div>
+                    </div>
+
+                    <!-- Lightroom -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/lightroom.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Lightroom">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Lightroom</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_photo">Photographie</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 90%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_lightroom">Retouche photo avancée, colorimétrie, gestion de bibliothèque.</p>
+                        </div>
+                    </div>
+
+                    <!-- Photoshop -->
+                    <div class="skill-card p-2 md:p-4 hover:bg-dark/50 rounded-xl transition-colors group">
+                        <img src="./assets/skills/photoshop.png" class="w-10 h-10 md:w-14 md:h-14 mx-auto mb-3 object-contain" alt="Photoshop">
+                        <span class="text-xs md:text-sm font-medium text-gray-200">Photoshop</span>
+                        <div class="skill-tooltip">
+                            <span class="text-[10px] text-primary font-bold uppercase tracking-wider" data-i18n="cat_retouch">Retouche</span>
+                            <div class="level-bar"><div class="level-fill" style="width: 60%"></div></div>
+                            <p class="text-[10px] text-gray-300 leading-tight" data-i18n="desc_ps">Montage, détourage, corrections d'images.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. LANGUAGES -->
                 <div id="languages" class="tab-content flex flex-wrap justify-center gap-4 md:gap-12 text-center">
-                    <div class="p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
+                    <div class="skill-card p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
                         <span class="text-4xl md:text-6xl block mb-2 md:mb-4 group-hover:scale-110 transition-transform">🇫🇷</span>
                         <span class="text-xs md:text-base font-medium text-gray-200 block" data-i18n="lang_fr">Français</span>
                         <span class="text-[10px] md:text-xs text-primary block mt-1" data-i18n="lang_native">Maternelle</span>
                     </div>
-                    <div class="p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
+                    <div class="skill-card p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
                         <span class="text-4xl md:text-6xl block mb-2 md:mb-4 group-hover:scale-110 transition-transform">🇬🇧</span>
                         <span class="text-xs md:text-base font-medium text-gray-200 block" data-i18n="lang_en">Anglais</span>
                         <span class="text-[10px] md:text-xs text-primary block mt-1" data-i18n="lang_fluent">Courant</span>
                     </div>
-                    <div class="p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
+                    <div class="skill-card p-2 md:p-4 w-24 md:w-32 hover:bg-dark/50 rounded-xl transition-colors group">
                         <span class="text-4xl md:text-6xl block mb-2 md:mb-4 group-hover:scale-110 transition-transform">🇮🇹</span>
                         <span class="text-xs md:text-base font-medium text-gray-200 block" data-i18n="lang_it">Italien</span>
                         <span class="text-[10px] md:text-xs text-primary block mt-1" data-i18n="lang_bilingual">Bilingue</span>
@@ -1072,7 +1479,97 @@
                 contact_subtitle: "Quelle est la suite ?", contact_title: "Me Contacter",
                 contact_text: "Je suis à la recherche de nouvelles opportunités à partir de décembre 2025. N’hésitez pas à me contacter si mon profil vous intéresse ou si vous souhaitez en savoir plus !",
                 btn_say_hello: "Contact",
-                badge_current: "ACTUEL"
+                badge_current: "ACTUEL",
+                btn_open: "Ouvrir",
+
+                // Skills specific translations
+                skill_sys_boucles: "Systèmes Bouclés",
+                skill_cem: "CEM",
+                skill_asm: "Assembleur",
+                skill_bus: "Bus Industriels",
+                skill_graph: "Graphes",
+
+                // Tooltip Categories
+                cat_arch: "Architecture",
+                cat_xilinx: "Outil Xilinx",
+                cat_altera: "Outil Intel/Altera",
+                cat_pcb: "Conception PCB",
+                cat_sbc: "SBC",
+                cat_sim: "Simulation Mixte",
+                cat_analog: "Analogique",
+                cat_auto: "Automatique",
+                cat_norm: "Normes",
+                cat_lang: "Langage",
+                cat_framework: "Framework",
+                cat_conn: "Connectivité",
+                cat_os: "OS & Shell",
+                cat_low: "Bas Niveau",
+                cat_realtime: "Temps Réel",
+                cat_comm: "Communication",
+                cat_versatile: "Polyvalent",
+                cat_dl: "Deep Learning",
+                cat_vision: "Vision",
+                cat_web: "Développement Web",
+                cat_data: "Gestion de Données",
+                cat_quantum: "Calcul Quantique",
+                cat_algo: "Algorithmique",
+                cat_calc: "Calcul",
+                cat_model: "Modélisation",
+                cat_version: "Versionning",
+                cat_qa : "Tests & Validation",
+                cat_dev: "IDE Principal",
+                cat_3d: "Fabrication - 3D",
+                cat_org: "Organisation",
+                cat_ds: "Environnement IA",
+                cat_cao: "CAO",
+                cat_vector: "Design Vectoriel",
+                cat_motion: "Motion Design",
+                cat_photo: "Photographie",
+                cat_retouch: "Retouche",
+
+                // Tooltip Descriptions
+                desc_fpga: "Logique programmable, VHDL, optimisation matérielle.",
+                desc_vivado: "Synthèse, Implémentation et Bitstream pour cartes Zynq-7000.",
+                desc_quartus: "Environnement de développement pour FPGA Altera.",
+                desc_kicad: "Schématique, Routage, Empreintes, Fabrication.",
+                desc_rpi: "GPIO, Serveur embarqué, Caméra, Python/C++.",
+                desc_proteus: "Schémas électroniques et simulation microcontrôleurs.",
+                desc_pspice: "Simulation de circuits, analyse fréquentielle.",
+                desc_auto: "PID, Stabilité, Nyquist.",
+                desc_cem: "Compatibilité Électromagnétique, blindage.",
+                desc_c: "Bas niveau, pointeurs, structures, mémoire.",
+                desc_arduino: "Prototypage rapide, librairies, C++ simplifié.",
+                desc_atmega: "Registres directs, interruptions, ISP, Bootloader.",
+                desc_esp: "Wi-Fi, BLE.",
+                desc_pic: "Architecture Harvard, Hardware.",
+                desc_linux: "Ubuntu, Bash, SSH, Command line.",
+                desc_asm: "Instructions machine, registres CPU.",
+                desc_ada: "Programmation embarquée, gestion de tâches.",
+                desc_rtos: "Ordonnancement, Tâches, PREEMPT_RT.",
+                desc_bus: "CAN, I2C, SPI, UART, Modbus.",
+                desc_python: "Data Science, Backend, Scripts.",
+                desc_pytorch: "Réseaux de neurones, GPU, Tenseurs.",
+                desc_opencv: "Traitement d'image temps réel.",
+                desc_html: "Intégration de contenus pour mon portfolio.",
+                desc_css: "Design responsive et framework TailwindCSS.",
+                desc_sql: "Bases du langage SQL et requêtes simples.",
+                desc_qiskit: "Option d'approfondissement : initiation aux algorithmes et circuits quantiques via Qiskit.",
+                desc_graph: "Dijkstra, BFS, DFS, k-connexité.",
+                desc_matlab: "Calcul matriciel, analyse de données.",
+                desc_simulink: "Simulation de systèmes dynamiques.",
+                desc_labview: "IHM industrielles, pilotage d'instruments de mesure et bancs de tests.",
+                desc_git: "CI/CD, Pull Requests, Branches.",
+                desc_shapr: "Modélisation 3D mécanique.",
+                desc_fusion: "Notions de modélisation 3D.",
+                desc_qa : "Suivi de bugs, gestion de tickets et cycles de validation logicielle.",
+                desc_vscode: "Environnement principal pour le développement.",
+                desc_cura: "Optimisation des supports, paramètres de remplissage et gestion des matériaux.",
+                desc_notion: "Gestion de projets personnels, organisation.",
+                desc_anaconda: "Gestion d'environnements virtuels et développement via Jupyter Notebook.",
+                desc_illus: "Création de schémas, logos basiques.",
+                desc_ae: "Animation simple, montage vidéo basique.",
+                desc_lightroom: "Retouche photo avancée, colorimétrie, gestion de bibliothèque.",
+                desc_ps: "Montage, détourage, corrections d'images."
             },
             en: {
                 nav_about: "About", nav_skills: "Skills", nav_exp: "Experience", nav_projects: "Projects", nav_contact: "Contact", nav_resume: "Resume",
@@ -1106,7 +1603,97 @@
                 contact_subtitle: "What's Next?", contact_title: "Get In Touch",
                 contact_text: "I am looking for new opportunities starting December 2025. Feel free to reach out if my profile interests you or if you would like to know more !",
                 btn_say_hello: "Contact",
-                badge_current: "CURRENT"
+                badge_current: "CURRENT",
+                btn_open: "Open",
+
+                // Skills specific translations
+                skill_sys_boucles: "Closed-loop systems",
+                skill_cem: "EMC",
+                skill_asm: "Assembly",
+                skill_bus: "Industrial Buses",
+                skill_graph: "Graph Theory",
+
+                // Tooltip Categories
+                cat_arch: "Architecture",
+                cat_xilinx: "Xilinx Tool",
+                cat_altera: "Intel/Altera Tool",
+                cat_pcb: "PCB Design",
+                cat_sbc: "SBC",
+                cat_sim: "Mixed Simulation",
+                cat_analog: "Analog",
+                cat_auto: "Automatic Control",
+                cat_norm: "Standards",
+                cat_lang: "Language",
+                cat_framework: "Framework",
+                cat_conn: "Connectivity",
+                cat_os: "OS & Shell",
+                cat_low: "Low Level",
+                cat_realtime: "Real Time",
+                cat_comm: "Communication",
+                cat_versatile: "Versatile",
+                cat_dl: "Deep Learning",
+                cat_vision: "Computer Vision",
+                cat_web: "Web Development",
+                cat_data: "Data Management",
+                cat_quantum: "Quantum Computing",
+                cat_algo: "Algorithmics",
+                cat_calc: "Calculation",
+                cat_model: "Modeling",
+                cat_version: "Versioning",
+                cat_qa : "Tests & Validation",
+                cat_dev: "Main IDE",
+                cat_3d: "3D Fabrication",
+                cat_org: "Organization",
+                cat_ds: "AI Environment",
+                cat_cao: "CAD",
+                cat_vector: "Vector Design",
+                cat_motion: "Motion Design",
+                cat_photo: "Photography",
+                cat_retouch: "Retouching",
+
+                // Tooltip Descriptions
+                desc_fpga: "Programmable logic, VHDL, hardware optimization.",
+                desc_vivado: "Synthesis, Implementation and Bitstream for Zynq boards.",
+                desc_quartus: "Development environment for Altera FPGAs.",
+                desc_kicad: "Schematic, Routing, Footprints, Manufacturing.",
+                desc_rpi: "GPIO, Embedded server, Camera, Python/C++.",
+                desc_proteus: "Electronic schematics and microcontroller simulation",
+                desc_pspice: "Circuit simulation, frequency analysis.",
+                desc_auto: "PID, Stability, Nyquist.",
+                desc_cem: "Electromagnetic Compatibility, shielding.",
+                desc_c: "Low level, pointers, structures, memory.",
+                desc_arduino: "Rapid prototyping, libraries, simplified C++.",
+                desc_atmega: "Direct registers, interrupts, ISP, Bootloader.",
+                desc_esp: "Wi-Fi, BLE",
+                desc_pic: "Harvard Architecture, Hardware.",
+                desc_linux: "Ubuntu, Bash, SSH, Command line.",
+                desc_asm: "Machine instructions, CPU registers.",
+                desc_ada: "Embedded programming, task management.",
+                desc_rtos: "Scheduling, Tasks, PREEMPT_RT.",
+                desc_bus: "CAN, I2C, SPI, UART, Modbus.",
+                desc_python: "Data Science, Backend, Scripts.",
+                desc_pytorch: "Neural networks, GPU, Tensors.",
+                desc_opencv: "Real-time image processing.",
+                desc_html: "Content integration for my portfolio.",
+                desc_css: "Responsive design and TailwindCSS framework.",
+                desc_sql: "Basics of SQL language and simple queries.",
+                desc_qiskit: "Advanced elective: introduction to quantum algorithms and circuits using Qiskit.",
+                desc_graph: "Dijkstra, BFS, DFS, k-connectivity.",
+                desc_matlab: "Matrix calculation, data analysis.",
+                desc_simulink: "Dynamic system simulation.",
+                desc_labview: "Industrial HMI, control of measuring instruments and test benches.",
+                desc_git: "CI/CD, Pull Requests, Branches.",
+                desc_shapr: "Mechanical 3D modeling.",
+                desc_qa : "Bug tracking, ticket management, and software validation cycles.",
+                desc_vscode: "Main environment for development.",
+                desc_cura: "Support optimization, infill parameters, and material management.",
+                desc_notion: "Personal project management, organization.",
+                desc_anaconda: "Virtual environment management and development via Jupyter Notebook.",
+                desc_fusion: "Basics of 3D modeling.",
+                desc_illus: "Creation of diagrams, basic logos.",
+                desc_ae: "Simple animation, basic video editing.",
+                desc_lightroom: "Advanced photo editing, color grading, library management.",
+                desc_ps: "Editing, clipping, image corrections."
             }
         };
 
